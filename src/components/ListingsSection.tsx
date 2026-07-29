@@ -404,24 +404,6 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                     <p className={`text-xs line-clamp-2 leading-relaxed mb-4 ${listing.isSold ? 'text-slate-400' : 'text-slate-600'}`}>
                       {listing.description || 'No description provided.'}
                     </p>
-
-                    {/* Seller Profile Info */}
-                    <div className="flex items-center gap-2 pt-3 border-t border-slate-200">
-                      {listing.sellerPhoto ? (
-                        <img
-                          src={listing.sellerPhoto}
-                          alt={listing.sellerName}
-                          className="w-6 h-6 rounded-full border border-[#1B3A5C] object-cover"
-                        />
-                      ) : (
-                        <div className="w-6 h-6 rounded-full bg-[#595B5A] border border-[#1B3A5C] flex items-center justify-center font-bold text-[10px] text-white">
-                          {listing.sellerName ? listing.sellerName[0] : 'A'}
-                        </div>
-                      )}
-                      <span className="text-xs font-bold text-[#1B3A5C] truncate">
-                        {listing.sellerName ? listing.sellerName.split(' ')[0] : 'AU Student'}
-                      </span>
-                    </div>
                   </div>
                 </div>
 

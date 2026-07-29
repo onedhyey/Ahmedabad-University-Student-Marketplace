@@ -13,6 +13,8 @@ import { MessageModal } from './components/MessageModal';
 import { DomainErrorToast } from './components/DomainErrorToast';
 import { Footer } from './components/Footer';
 import { TermsPage } from './TermsPage';
+import { GuidePage } from './components/GuidePage';
+import { DiscountsPage } from './components/DiscountsPage';
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -25,16 +27,14 @@ export default function App() {
   const [selectedMessageListing, setSelectedMessageListing] = useState<Listing | null>(null);
   const [showDomainWarning, setShowDomainWarning] = useState(false);
 
-  const [view, setView] = useState<'marketplace' | 'terms' | 'manifesto'>(() => {
+  const [view, setView] = useState<'marketplace' | 'guide' | 'discounts' | 'terms' | 'manifesto'>(() => {
     if (typeof window !== 'undefined') {
       const path = window.location.pathname;
       const hash = window.location.hash;
-      if (path === '/terms' || hash === '#terms') {
-        return 'terms';
-      }
-      if (path === '/manifesto' || hash === '#manifesto') {
-        return 'manifesto';
-      }
+      if (path === '/guide' || hash === '#guide') return 'guide';
+      if (path === '/discounts' || hash === '#discounts') return 'discounts';
+      if (path === '/terms' || hash === '#terms') return 'terms';
+      if (path === '/manifesto' || hash === '#manifesto') return 'manifesto';
     }
     return 'marketplace';
   });
@@ -49,12 +49,16 @@ export default function App() {
     }, 3000);
   };
 
-  // URL routing listener for /terms, /manifesto, or hashes
+  // URL routing listener for /guide, /discounts, /terms, /manifesto, or hashes
   useEffect(() => {
     const handleLocationChange = () => {
       const path = window.location.pathname;
       const hash = window.location.hash;
-      if (path === '/terms' || hash === '#terms') {
+      if (path === '/guide' || hash === '#guide') {
+        setView('guide');
+      } else if (path === '/discounts' || hash === '#discounts') {
+        setView('discounts');
+      } else if (path === '/terms' || hash === '#terms') {
         setView('terms');
       } else if (path === '/manifesto' || hash === '#manifesto') {
         setView('manifesto');
@@ -70,6 +74,30 @@ export default function App() {
       window.removeEventListener('hashchange', handleLocationChange);
     };
   }, []);
+
+  const navigateToGuide = () => {
+    setView('guide');
+    try {
+      if (window.location.pathname !== '/guide') {
+        window.history.pushState(null, '', '/guide');
+      }
+    } catch {
+      window.location.hash = 'guide';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToDiscounts = () => {
+    setView('discounts');
+    try {
+      if (window.location.pathname !== '/discounts') {
+        window.history.pushState(null, '', '/discounts');
+      }
+    } catch {
+      window.location.hash = 'discounts';
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const navigateToTerms = () => {
     setView('terms');
@@ -98,7 +126,7 @@ export default function App() {
   const navigateToHome = () => {
     setView('marketplace');
     try {
-      if (window.location.pathname === '/terms' || window.location.pathname === '/manifesto' || window.location.hash === '#terms' || window.location.hash === '#manifesto') {
+      if (window.location.pathname !== '/' || window.location.hash !== '') {
         window.history.pushState(null, '', '/');
       }
     } catch {
@@ -204,7 +232,7 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={(tab) => {
           setActiveTab(tab);
-          if (view === 'terms' || view === 'manifesto') {
+          if (view !== 'marketplace') {
             navigateToHome();
           }
         }}
@@ -212,13 +240,27 @@ export default function App() {
         onOpenSignIn={() => {}}
         onShowDomainWarning={() => setShowDomainWarning(true)}
         onNavigateHome={navigateToHome}
+        onOpenGuide={navigateToGuide}
+        onOpenDiscounts={navigateToDiscounts}
         onOpenTerms={navigateToTerms}
         onOpenManifesto={navigateToManifesto}
       />
 
       {/* Main Page Layout */}
       <main className="flex-1">
-        {view === 'terms' || view === 'manifesto' ? (
+        {view === 'guide' ? (
+          <GuidePage
+            onBackToMarketplace={navigateToHome}
+            onNavigateToDiscounts={navigateToDiscounts}
+            onNavigateToTerms={navigateToTerms}
+          />
+        ) : view === 'discounts' ? (
+          <DiscountsPage
+            onBackToMarketplace={navigateToHome}
+            onNavigateToGuide={navigateToGuide}
+            onNavigateToTerms={navigateToTerms}
+          />
+        ) : view === 'terms' || view === 'manifesto' ? (
           <TermsPage 
             initialTab={view === 'manifesto' ? 'manifesto' : 'terms'} 
             onBackToMarketplace={navigateToHome} 
@@ -254,7 +296,12 @@ export default function App() {
       </main>
 
       {/* (4) Footer */}
-      <Footer onOpenTerms={navigateToTerms} onOpenManifesto={navigateToManifesto} />
+      <Footer 
+        onOpenGuide={navigateToGuide}
+        onOpenDiscounts={navigateToDiscounts}
+        onOpenTerms={navigateToTerms} 
+        onOpenManifesto={navigateToManifesto} 
+      />
 
       {/* Modals & Popups */}
       {selectedMessageListing && (

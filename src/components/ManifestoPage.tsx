@@ -18,7 +18,12 @@ import {
   Ban,
   Scale,
   HelpCircle,
-  AlertCircle
+  AlertCircle,
+  EyeOff,
+  MessageSquare,
+  Gavel,
+  CheckCircle2,
+  ShieldAlert
 } from 'lucide-react';
 
 interface ManifestoPageProps {
@@ -270,17 +275,17 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({
         <div className="space-y-8 animate-in fade-in duration-300">
           
           {/* Terms Hero Banner */}
-          <div className="bg-gradient-to-br from-[#1B3A5C] via-[#2A4D73] to-[#800020] text-white rounded-3xl p-6 sm:p-10 border-2 border-[#1B3A5C] shadow-lg mb-10 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#1B3A5C] via-[#2A4D73] to-[#800020] text-white rounded-3xl p-6 sm:p-10 border-2 border-[#1B3A5C] shadow-lg mb-8 relative overflow-hidden">
             <div className="relative z-10">
-              <div className="inline-flex items-center gap-2 bg-[#FFD93D] text-[#1B3A5C] font-extrabold text-xs px-3 py-1 rounded-full mb-4 shadow-xs">
+              <div className="inline-flex items-center gap-2 bg-[#FFD93D] text-[#1B3A5C] font-extrabold text-xs px-3.5 py-1 rounded-full mb-4 shadow-xs">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Campus Guidelines & Safety</span>
               </div>
               <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-3">
-                Terms & Conditions
+                Terms & Platform Philosophy
               </h1>
-              <p className="text-slate-200 text-sm sm:text-base max-w-2xl font-medium leading-relaxed">
-                Clear, transparent, and fair rules to protect every student, buyer, and seller across Ahmedabad University.
+              <p className="text-slate-100 text-sm sm:text-base max-w-2xl font-medium leading-relaxed">
+                Clear, transparent, and fair rules to protect every student, buyer, and seller across Ahmedabad University. Written by the students, for the students.
               </p>
               <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-bold text-slate-300 border-t border-white/10 pt-4">
                 <span className="flex items-center gap-1.5">
@@ -292,269 +297,240 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({
             </div>
           </div>
 
-          {/* Positive Highlights Box: Why the 10% Fee matters */}
-          <div className="bg-[#FFFDF5] border-2 border-[#FFD93D] rounded-3xl p-6 sm:p-8 mb-8 shadow-xs relative">
-            <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-[#FFD93D] border-2 border-[#1B3A5C] flex items-center justify-center shrink-0 shadow-xs text-[#1B3A5C]">
-                <Coins className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <h2 className="text-lg font-black text-[#1B3A5C]">
-                    Transparent 10% Platform Fee & Reinvestment
-                  </h2>
-                  <span className="bg-[#800020] text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-                    Student Initiative
-                  </span>
+          {/* 4 Core Philosophy Quick Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* Card 1: Privacy First */}
+            <div className="bg-white border-2 border-[#1B3A5C] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1B3A5C] border border-[#1B3A5C]/20 flex items-center justify-center shrink-0">
+                  <EyeOff className="w-5 h-5" />
                 </div>
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium mb-4">
-                  AUSM charges a modest <strong>10% platform fee on successful transactions</strong>. 
-                  Because AUSM is an independent, student-built initiative, every single rupee generated directly sustains and enhances this vital campus resource for the entire Ahmedabad University community.
-                </p>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                  <div className="bg-white p-3 rounded-xl border border-amber-200 flex items-start gap-2">
-                    <Server className="w-4 h-4 text-[#800020] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-[#1B3A5C] font-bold">Cloud & Hosting</strong>
-                      <span className="text-slate-600">High-speed Cloud Run servers and domain hosting for zero downtime.</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3 rounded-xl border border-amber-200 flex items-start gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#1B3A5C] shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-[#1B3A5C] font-bold">Security & Auth</strong>
-                      <span className="text-slate-600">Enforcing strict @ahduni.edu.in verification to keep non-students out.</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3 rounded-xl border border-amber-200 flex items-start gap-2">
-                    <Lock className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-[#1B3A5C] font-bold">Database & Media Storage</strong>
-                      <span className="text-slate-600">Instant real-time syncing and storage for crisp listing photos.</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-3 rounded-xl border border-amber-200 flex items-start gap-2">
-                    <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="block text-[#1B3A5C] font-bold">Continuous Upgrades</strong>
-                      <span className="text-slate-600">Adding new features, mobile optimization, and platform maintenance.</span>
-                    </div>
-                  </div>
+                <div>
+                  <h3 className="font-extrabold text-[#1B3A5C] text-base">Privacy First</h3>
+                  <span className="text-[11px] font-bold text-slate-500">No personal contact details shared</span>
                 </div>
-
-                <p className="text-xs text-[#800020] font-bold mt-4 italic">
-                  ✨ When you buy or sell on AUSM, you aren't just completing a deal — you are directly keeping an independent, ad-free campus tool alive and thriving for fellow students!
-                </p>
               </div>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                Buying and selling shouldn't require sharing personal contact information with strangers. All listings and transactions stay private.
+              </p>
             </div>
+
+            {/* Card 2: Anonymous Marketplace */}
+            <div className="bg-white border-2 border-[#1B3A5C] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-800 border border-purple-200 flex items-center justify-center shrink-0">
+                  <MessageSquare className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-[#1B3A5C] text-base">Anonymous Marketplace</h3>
+                  <span className="text-[11px] font-bold text-slate-500">Independent campus pickups</span>
+                </div>
+              </div>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                No phone numbers needed. AUSM acts as the point of communication, and items are collected independently on campus.
+              </p>
+            </div>
+
+            {/* Card 3: Final Sales */}
+            <div className="bg-white border-2 border-[#1B3A5C] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center shrink-0">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-[#1B3A5C] text-base">Payments & Returns</h3>
+                  <span className="text-[11px] font-bold text-slate-500">All purchases are final</span>
+                </div>
+              </div>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                No standard returns or replacements. This keeps transactions simple and avoids unnecessary disputes between students.
+              </p>
+            </div>
+
+            {/* Card 4: Founder Intervention */}
+            <div className="bg-white border-2 border-[#1B3A5C] rounded-2xl p-5 shadow-xs hover:shadow-md transition-shadow">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-red-50 text-[#800020] border border-[#800020]/20 flex items-center justify-center shrink-0">
+                  <Gavel className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-[#1B3A5C] text-base">Founder Review</h3>
+                  <span className="text-[11px] font-bold text-slate-500">Exceptional circumstances only</span>
+                </div>
+              </div>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                Review available only if an item is materially different during supervised pickup. Discretionary rare exception.
+              </p>
+            </div>
+
           </div>
 
-          {/* 10 Standard Terms Sections */}
-          <div className="space-y-6 text-[#1B3A5C]">
+          {/* Detailed Policy Sections */}
+          <div className="space-y-6 text-[#1B3A5C] pt-2">
             
-            {/* 1. Eligibility */}
+            {/* 1. Privacy First */}
+            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1B3A5C] border border-blue-200 flex items-center justify-center font-bold">
+                  <Lock className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">1. Privacy First</h3>
+              </div>
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-3">
+                <p>
+                  AUSM is built with student privacy in mind. We believe buying and selling shouldn't require sharing personal contact information with strangers.
+                </p>
+                <div className="bg-[#FAFBFC] p-4 rounded-xl border border-slate-200">
+                  <p className="text-slate-700 text-xs font-semibold leading-relaxed">
+                    🔒 All listings and transactions are designed to remain private, with no personal details revealed unnecessarily. You can buy and sell on campus without ever broadcasting your personal phone number or private contact details.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            {/* 2. Anonymous Marketplace */}
+            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-900 border border-purple-200 flex items-center justify-center font-bold">
+                  <UserCheck className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">2. Anonymous Marketplace & Independent Campus Pickup</h3>
+              </div>
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-3">
+                <p>
+                  Buyers and sellers do not need to exchange phone numbers or personal contact details.
+                </p>
+                <ul className="list-disc pl-5 space-y-2 font-medium text-slate-600">
+                  <li>Since AUSM is exclusively for Ahmedabad University students, AUSM acts as the point of communication throughout the transaction.</li>
+                  <li>Products are collected and picked up independently on campus without requiring buyers and sellers to directly contact one another.</li>
+                  <li>This keeps transactions clean, safe, and hassle-free for everyone involved.</li>
+                </ul>
+              </div>
+            </section>
+
+            {/* 3. Payments & Returns */}
+            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center font-bold">
+                  <CheckCircle2 className="w-5 h-5" />
+                </div>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">3. Payments & Returns Policy</h3>
+              </div>
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-3">
+                <p>
+                  <strong>All purchases made through AUSM are considered final.</strong>
+                </p>
+                <p className="text-slate-600 font-medium">
+                  The platform does not offer returns or replacements as a standard policy, helping keep transactions simple and avoiding unnecessary disputes between students.
+                </p>
+                <div className="bg-[#FAFBFC] p-3.5 rounded-xl border border-slate-200 text-xs text-slate-600 font-medium">
+                  💡 Before completing any transaction, buyers have full opportunity to inspect the item during the pickup process to ensure they are satisfied.
+                </div>
+              </div>
+            </section>
+
+            {/* 4. Founder Intervention (Exceptional Circumstances Only) */}
+            <section className="bg-white border-2 border-[#800020]/30 rounded-2xl p-6 shadow-xs hover:border-[#800020] transition-colors">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-xl bg-[#800020]/10 text-[#800020] border border-[#800020]/20 flex items-center justify-center font-bold">
+                  <Gavel className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-[#1B3A5C]">4. Founder Intervention (Exceptional Circumstances Only)</h3>
+                  <span className="text-xs font-bold text-[#800020]">Fairness & Trust Safeguard</span>
+                </div>
+              </div>
+              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-3">
+                <p>
+                  To maintain absolute trust and fairness across the marketplace, the founder maintains a clear policy regarding when review or intervention is possible:
+                </p>
+
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+                  <strong className="block text-[#800020] font-bold text-xs">✕ Routine Disagreements & Mind Changes:</strong>
+                  <p className="text-slate-600 text-xs font-medium">
+                    The founder will <strong>not</strong> mediate routine disagreements, buyer's remorse, or changes of mind.
+                  </p>
+                </div>
+
+                <div className="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 space-y-1">
+                  <strong className="block text-emerald-900 font-bold text-xs">✓ Material Difference Review During Supervised Pickup:</strong>
+                  <p className="text-slate-700 text-xs font-medium">
+                    The founder will only consider stepping in if, during the supervised pickup process, it becomes evident that the item being handed over is <strong>materially different</strong> from what was originally listed or previously shown by the seller.
+                  </p>
+                </div>
+
+                <div className="bg-[#FAFBFC] p-4 rounded-xl border border-slate-200 space-y-2">
+                  <strong className="block text-xs font-bold text-[#1B3A5C]">Examples of Material Differences:</strong>
+                  <ul className="list-disc pl-5 text-xs text-slate-600 font-medium space-y-1">
+                    <li>Undisclosed damage (e.g., hidden cracks, malfunctioning electronic components, or major structural wear).</li>
+                    <li>Missing components (e.g., vital power cables, missing textbook pages, key accessories).</li>
+                    <li>Significant differences that were not communicated beforehand.</li>
+                  </ul>
+                </div>
+
+                <div className="p-4 bg-amber-50 rounded-xl border border-amber-300 text-xs text-amber-950 font-medium leading-relaxed">
+                  <strong>Discretionary & Exceptional Nature:</strong> This review exists solely to maintain fairness and trust within the marketplace. Any decision to intervene is entirely at the founder's discretion and should be presented as a rare exception rather than a standard service. This shall be the <strong>only case</strong> where a return or replacement might be initiated based on the buyer's request.
+                </div>
+              </div>
+            </section>
+
+            {/* 5. Student Eligibility & Verification */}
             <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
                   <UserCheck className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">1. Student Eligibility & Verification</h3>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">5. Student Verification & Eligibility</h3>
               </div>
               <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
                 <p>
-                  AUSM is exclusively designed for currently enrolled students, faculty, and staff of <strong>Ahmedabad University</strong>.
+                  AUSM is exclusively for currently enrolled students, faculty, and staff of <strong>Ahmedabad University</strong> authenticated via official <strong>@ahduni.edu.in</strong> Google Workspace accounts.
                 </p>
-                <ul className="list-disc pl-5 space-y-1 font-medium text-slate-600">
-                  <li>You must authenticate using your official <strong>@ahduni.edu.in</strong> Google workspace account.</li>
-                  <li>Accounts authenticated with personal Gmail addresses or external domains will be automatically restricted.</li>
-                  <li>You agree to provide true, accurate, and current profile details.</li>
-                </ul>
               </div>
             </section>
 
-            {/* 2. Account Responsibility */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
+            {/* 6. Transparent Reinvestment */}
+            <section className="bg-[#FFFDF5] border-2 border-[#FFD93D] rounded-2xl p-6 shadow-xs">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
-                  <ShieldCheck className="w-5 h-5" />
+                <div className="w-9 h-9 rounded-xl bg-[#FFD93D] text-[#1B3A5C] flex items-center justify-center font-bold">
+                  <Coins className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">2. Account Responsibility</h3>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">6. Transparent 10% Platform Reinvestment</h3>
               </div>
               <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
                 <p>
-                  Your account is tied directly to your university credentials. You are responsible for maintaining the security of your account and all actions taken through it.
-                </p>
-                <p className="text-slate-600 font-medium">
-                  If you suspect unauthorized activity on your account, please notify the platform administrators immediately.
+                  AUSM charges a modest 10% platform fee on successful transactions. As an independent student initiative, every rupee generated goes directly toward funding cloud run servers, database hosting, domain maintenance, and continuous platform improvements for the student community.
                 </p>
               </div>
             </section>
 
-            {/* 3. Prohibited Items */}
+            {/* 7. Prohibited Items */}
             <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-xl bg-[#800020]/10 text-[#800020] flex items-center justify-center font-bold">
                   <Ban className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">3. Prohibited Items Policy</h3>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">7. Prohibited Campus Items</h3>
               </div>
               <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
                 <p>
-                  To maintain campus integrity and safety, the following items and services are <strong>strictly prohibited</strong> on AUSM:
+                  Weapons, hazardous equipment, alcohol, tobacco, vapes, drugs, leaked exams, stolen property, and counterfeit goods are strictly prohibited on AUSM.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-medium text-slate-700 pt-2">
-                  <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2">
-                    <span className="text-[#800020] font-black">✕</span> Weapons or hazardous equipment
-                  </div>
-                  <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2">
-                    <span className="text-[#800020] font-black">✕</span> Alcohol, tobacco, vapes or drugs
-                  </div>
-                  <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2">
-                    <span className="text-[#800020] font-black">✕</span> Leaked exams or academic dishonesty
-                  </div>
-                  <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2">
-                    <span className="text-[#800020] font-black">✕</span> Stolen property or counterfeit goods
-                  </div>
-                  <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2">
-                    <span className="text-[#800020] font-black">✕</span> Prescription meds & medical devices
-                  </div>
-                  <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-200 flex items-center gap-2">
-                    <span className="text-[#800020] font-black">✕</span> Spam or non-item marketing
-                  </div>
-                </div>
               </div>
             </section>
 
-            {/* 4. Accurate Listings */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
-                  <PackageCheck className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">4. Accurate Listings & Fair Pricing</h3>
-              </div>
-              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
-                <p>
-                  When listing an item for sale (textbooks, bicycles, scientific calculators, hostel furniture, electronics):
-                </p>
-                <ul className="list-disc pl-5 space-y-1 font-medium text-slate-600">
-                  <li>Upload original, clear photos showing the current condition of the exact item.</li>
-                  <li>Provide an honest description specifying any defects, missing parts, or wear.</li>
-                  <li>Set a realistic price in Indian Rupees (₹). Misleading prices (e.g. ₹1 placeholder for an expensive device) are prohibited.</li>
-                  <li>Promptly mark your item as "Sold" once the transaction is finished.</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* 5. Buyer & Seller Responsibilities */}
+            {/* 8. Community Expectations */}
             <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
                   <HeartHandshake className="w-5 h-5" />
                 </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">5. Buyer & Seller Responsibilities</h3>
-              </div>
-              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-3">
-                <div className="bg-[#FAFBFC] p-4 rounded-xl border border-slate-200">
-                  <h4 className="font-extrabold text-[#1B3A5C] mb-1">Campus Meetups & Safety</h4>
-                  <p className="text-slate-600 text-xs">
-                    Always conduct transactions in safe, public areas on the Ahmedabad University campus (such as the University Canteen, Central Library Plaza, Student Activity Centre, or School courtyards).
-                  </p>
-                </div>
-                <div className="bg-[#FAFBFC] p-4 rounded-xl border border-slate-200">
-                  <h4 className="font-extrabold text-[#1B3A5C] mb-1">In-Person Item Inspection</h4>
-                  <p className="text-slate-600 text-xs">
-                    Buyers should test electronic devices, verify textbook editions, and inspect physical conditions before completing payment. Sellers agree to give buyers adequate time during the meetup to inspect the item.
-                  </p>
-                </div>
-              </div>
-            </section>
-
-            {/* 6. Payments & Refunds */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
-                  <RefreshCw className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">6. Payments, Handovers & Refund Policy</h3>
+                <h3 className="text-lg font-extrabold text-[#1B3A5C]">8. Built By Students, For Students</h3>
               </div>
               <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
                 <p>
-                  Payments are arranged directly between students via UPI (Google Pay, PhonePe, Paytm) or cash during handover.
-                </p>
-                <p className="text-slate-600 font-medium">
-                  Because items are inspected in person prior to payment, transactions are considered final once completed. If an item is found defective during inspection, the buyer is under no obligation to finalize the transaction.
-                </p>
-              </div>
-            </section>
-
-            {/* 7. Privacy */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">7. Privacy & Data Protection</h3>
-              </div>
-              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
-                <p>
-                  We respect your privacy as an AU student. Your contact information is used strictly to facilitate buyer-seller communication on campus.
-                </p>
-                <ul className="list-disc pl-5 space-y-1 font-medium text-slate-600">
-                  <li>We will never sell or share your personal data with commercial advertisers.</li>
-                  <li>In-app communication is safeguarded to prevent spam and phishing.</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* 8. Liability Disclaimer */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
-                  <Scale className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">8. Platform Role & Liability Disclaimer</h3>
-              </div>
-              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
-                <p>
-                  AUSM acts solely as a technological facilitator for peer-to-peer campus exchanges.
-                </p>
-                <p className="text-slate-600 font-medium">
-                  While we verify `@ahduni.edu.in` accounts and moderate listings, AUSM is not a party to the physical transaction and is not liable for warranties, product lifespan, or post-handover damages.
-                </p>
-              </div>
-            </section>
-
-            {/* 9. Dispute Resolution */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#C9E2F5]/40 text-[#1B3A5C] flex items-center justify-center font-bold">
-                  <HelpCircle className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">9. Student Dispute Resolution</h3>
-              </div>
-              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
-                <p>
-                  We encourage open, friendly communication between peers. If an issue arises regarding a listing or transaction, our student moderation team is available to assist in mediating a fair resolution.
-                </p>
-              </div>
-            </section>
-
-            {/* 10. Account Suspension */}
-            <section className="bg-white border-2 border-[#C9E2F5] rounded-2xl p-6 shadow-xs hover:border-[#1B3A5C] transition-colors">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-9 h-9 rounded-xl bg-[#800020]/10 text-[#800020] flex items-center justify-center font-bold">
-                  <AlertCircle className="w-5 h-5" />
-                </div>
-                <h3 className="text-lg font-extrabold text-[#1B3A5C]">10. Account Suspension & Enforcement</h3>
-              </div>
-              <div className="text-xs sm:text-sm text-slate-700 leading-relaxed space-y-2">
-                <p>
-                  To maintain trust and safety across Ahmedabad University, accounts found engaging in harassment, posting prohibited items, creating fake listings, or attempting domain bypass will be suspended immediately.
+                  AUSM is a community-driven tool built to make campus life easier, more sustainable, and affordable. We expect all students to interact with honesty, kindness, and mutual respect.
                 </p>
               </div>
             </section>

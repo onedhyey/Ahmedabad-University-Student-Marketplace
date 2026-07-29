@@ -11,8 +11,7 @@ interface MessageModalProps {
 export const MessageModal: React.FC<MessageModalProps> = ({ listing, onClose, onShowToast }) => {
   if (!listing) return null;
 
-  const sellerFirstName = listing.sellerName ? listing.sellerName.split(' ')[0] : 'AU Student';
-  const defaultMessage = `Hi ${sellerFirstName}! I saw your listing for "${listing.name}" (₹${listing.price}) on Campus Cart AU and I'd like to buy it. Is it still available for campus pickup?`;
+  const defaultMessage = `Hi! I saw your listing for "${listing.name}" (₹${listing.price}) on Campus Cart AU and I'd like to buy it. Is it still available for campus pickup?`;
 
   const [message, setMessage] = useState(defaultMessage);
   const [copied, setCopied] = useState(false);
@@ -42,7 +41,7 @@ export const MessageModal: React.FC<MessageModalProps> = ({ listing, onClose, on
             <MessageSquare className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-extrabold text-lg text-[#1B3A5C]">Contact {sellerFirstName}</h3>
+            <h3 className="font-extrabold text-lg text-[#1B3A5C]">Contact Seller</h3>
             <p className="text-xs text-slate-500 font-medium">AU Campus Marketplace Direct Message</p>
           </div>
         </div>

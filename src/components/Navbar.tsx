@@ -32,6 +32,8 @@ interface NavbarProps {
   onOpenSignIn: () => void;
   onShowDomainWarning: () => void;
   onNavigateHome?: () => void;
+  onOpenGuide?: () => void;
+  onOpenDiscounts?: () => void;
   onOpenTerms?: () => void;
   onOpenManifesto?: () => void;
 }
@@ -44,16 +46,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenSignIn,
   onShowDomainWarning,
   onNavigateHome,
+  onOpenGuide,
+  onOpenDiscounts,
   onOpenTerms,
   onOpenManifesto
 }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  // Modals for resources
-  const [guideModalOpen, setGuideModalOpen] = useState(false);
-  const [discountsModalOpen, setDiscountsModalOpen] = useState(false);
 
   const navRef = useRef<HTMLDivElement>(null);
 
@@ -162,7 +162,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       onClick={() => {
                         setResourcesOpen(false);
-                        setGuideModalOpen(true);
+                        if (onOpenGuide) onOpenGuide();
                       }}
                       className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#1B3A5C] hover:bg-[#C9E2F5]/40 flex items-center gap-2.5 transition-colors cursor-pointer group"
                     >
@@ -179,7 +179,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <button
                       onClick={() => {
                         setResourcesOpen(false);
-                        setDiscountsModalOpen(true);
+                        if (onOpenDiscounts) onOpenDiscounts();
                       }}
                       className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#1B3A5C] hover:bg-[#C9E2F5]/40 flex items-center gap-2.5 transition-colors cursor-pointer group"
                     >
@@ -387,159 +387,6 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
         </div>
       </header>
-
-      {/* MODAL 1: Marketplace Guide */}
-      {guideModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white border-2 border-[#1B3A5C] rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setGuideModalOpen(false)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-[#1B3A5C] bg-slate-100 hover:bg-slate-200 rounded-full transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-[#C9E2F5]/60 text-[#1B3A5C] border border-[#1B3A5C]/20 flex items-center justify-center shrink-0">
-                <BookOpen className="w-6 h-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black text-[#1B3A5C]">
-                  AU Marketplace Guide
-                </h3>
-                <p className="text-xs text-slate-500 font-medium">
-                  How to buy, sell, and meet safely on campus
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4 text-xs sm:text-sm text-slate-700">
-              <div className="p-4 bg-[#FAFBFC] border border-slate-200 rounded-2xl">
-                <h4 className="font-black text-[#800020] mb-1 flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4" /> 1. Strictly Verified AU Accounts
-                </h4>
-                <p className="text-slate-600 font-medium">
-                  Only users logged in via official <strong className="text-[#1B3A5C]">@ahduni.edu.in</strong> Google Workspace accounts can message sellers or post items. Non-student accounts are restricted automatically.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#FAFBFC] border border-slate-200 rounded-2xl">
-                <h4 className="font-black text-[#1B3A5C] mb-1 flex items-center gap-1.5">
-                  <Building2 className="w-4 h-4" /> 2. Safe Campus Meetup Spots
-                </h4>
-                <p className="text-slate-600 font-medium">
-                  Always arrange item inspection at popular, public university locations: Central Library Plaza, University Canteen, Student Activity Centre, or School courtyards.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#FAFBFC] border border-slate-200 rounded-2xl">
-                <h4 className="font-black text-[#1B3A5C] mb-1 flex items-center gap-1.5">
-                  <Compass className="w-4 h-4 text-amber-600" /> 3. In-Person Inspection & Fair Pricing
-                </h4>
-                <p className="text-slate-600 font-medium">
-                  Test electronics, inspect textbooks, or try bicycles before transferring payment. Sellers should provide accurate photos and descriptions.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#FAFBFC] border border-slate-200 rounded-2xl">
-                <h4 className="font-black text-[#1B3A5C] mb-1 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-emerald-600" /> 4. Direct UPI or Cash Payments
-                </h4>
-                <p className="text-slate-600 font-medium">
-                  Sellers set prices in Rupees (₹). Buyers pay directly via UPI (Google Pay, PhonePe, Paytm) or cash at the time of handover.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-slate-200 flex justify-end">
-              <button
-                onClick={() => setGuideModalOpen(false)}
-                className="bg-[#1B3A5C] hover:bg-[#800020] text-white font-extrabold text-xs px-5 py-2.5 rounded-xl transition-colors cursor-pointer"
-              >
-                Got It, Thanks!
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* MODAL 2: Student Discounts */}
-      {discountsModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
-          <div className="bg-white border-2 border-[#1B3A5C] rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setDiscountsModalOpen(false)}
-              className="absolute top-4 right-4 p-2 text-slate-400 hover:text-[#1B3A5C] bg-slate-100 hover:bg-slate-200 rounded-full transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-2xl bg-amber-100 text-amber-800 border border-amber-300 flex items-center justify-center shrink-0">
-                <Gift className="w-6 h-6 text-[#800020]" />
-              </div>
-              <div>
-                <h3 className="text-xl font-black text-[#1B3A5C]">
-                  AU Student Perks & Discounts
-                </h3>
-                <p className="text-xs text-slate-500 font-medium">
-                  Exclusive savings available with your Ahmedabad University ID
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
-              <div className="p-4 bg-[#FAFBFC] border border-amber-200 rounded-2xl">
-                <div className="flex items-center gap-2 text-[#800020] font-black mb-1">
-                  <Percent className="w-4 h-4" /> AU Canteen Combos
-                </div>
-                <p className="text-slate-600 text-xs font-medium">
-                  Get 10% off selected lunch thalis and beverage combos with valid @ahduni student ID.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#FAFBFC] border border-amber-200 rounded-2xl">
-                <div className="flex items-center gap-2 text-[#1B3A5C] font-black mb-1">
-                  <BookOpen className="w-4 h-4" /> Campus Stationery Hub
-                </div>
-                <p className="text-slate-600 text-xs font-medium">
-                  Discounted spiral binding for course materials and bulk notebook prints.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#FAFBFC] border border-amber-200 rounded-2xl">
-                <div className="flex items-center gap-2 text-[#1B3A5C] font-black mb-1">
-                  <Building2 className="w-4 h-4" /> Central Library Prints
-                </div>
-                <p className="text-slate-600 text-xs font-medium">
-                  Free quota of 25 research paper printouts per semester at the AU Library desk.
-                </p>
-              </div>
-
-              <div className="p-4 bg-[#FAFBFC] border border-amber-200 rounded-2xl">
-                <div className="flex items-center gap-2 text-emerald-700 font-black mb-1">
-                  <Gift className="w-4 h-4" /> Local Cafe Partner Perks
-                </div>
-                <p className="text-slate-600 text-xs font-medium">
-                  Flash your AU ID at participating coffee spots in Navrangpura for 15% off espresso orders.
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 pt-4 border-t border-slate-200 flex justify-between items-center">
-              <span className="text-[11px] text-slate-500 font-medium">
-                Show your physical or digital AU ID at checkout.
-              </span>
-              <button
-                onClick={() => setDiscountsModalOpen(false)}
-                className="bg-[#1B3A5C] hover:bg-[#800020] text-white font-extrabold text-xs px-5 py-2.5 rounded-xl transition-colors cursor-pointer"
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };

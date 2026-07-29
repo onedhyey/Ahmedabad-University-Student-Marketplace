@@ -2,11 +2,13 @@ import React from 'react';
 import { ShieldCheck, FileText, Sparkles, Heart } from 'lucide-react';
 
 interface FooterProps {
+  onOpenGuide?: () => void;
+  onOpenDiscounts?: () => void;
   onOpenTerms?: () => void;
   onOpenManifesto?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenTerms, onOpenManifesto }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenGuide, onOpenDiscounts, onOpenTerms, onOpenManifesto }) => {
   return (
     <footer className="mt-20 border-t-2 border-[#C9E2F5] bg-[#FAFBFC] py-8 px-4 text-center">
       <div className="max-w-4xl mx-auto flex flex-col items-center justify-center gap-3">
@@ -24,6 +26,24 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTerms, onOpenManifesto }) 
         {/* Links & Badges */}
         <div className="flex flex-wrap items-center justify-center gap-4 text-xs font-bold text-[#1B3A5C] pt-2 border-t border-slate-200/80 w-full max-w-xl">
           <button
+            onClick={onOpenGuide}
+            className="inline-flex items-center gap-1.5 text-[#1B3A5C] hover:underline hover:text-[#800020] transition-colors cursor-pointer"
+          >
+            <span>Marketplace Guide</span>
+          </button>
+
+          <span className="text-slate-300">•</span>
+
+          <button
+            onClick={onOpenDiscounts}
+            className="inline-flex items-center gap-1.5 text-[#1B3A5C] hover:underline hover:text-[#800020] transition-colors cursor-pointer"
+          >
+            <span>Student Discounts</span>
+          </button>
+
+          <span className="text-slate-300">•</span>
+
+          <button
             onClick={onOpenManifesto}
             className="inline-flex items-center gap-1.5 text-[#1B3A5C] hover:underline hover:text-[#800020] transition-colors cursor-pointer"
           >
@@ -40,11 +60,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenTerms, onOpenManifesto }) 
             <FileText className="w-3.5 h-3.5" />
             <span>Terms & Guidelines</span>
           </button>
-          
-          <span className="text-slate-300">•</span>
+        </div>
 
-          <span className="inline-flex items-center gap-1 text-slate-600 font-semibold">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+        {/* Verified Badge Row */}
+        <div className="pt-1 flex items-center justify-center">
+          <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#1B3A5C]">
+            <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>@ahduni.edu.in Verified</span>
           </span>
         </div>
