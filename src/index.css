@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+:root {
+  --paper-white: #FAFBFC;
+  --checked-grid-blue: #C9E2F5;
+  --ink-navy: #1B3A5C;
+  --notebook-red: #800020;
+  --cool-neutral-grey: #595B5A;
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-doodle: 'Caveat', cursive;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--paper-white);
+  color: var(--ink-navy);
+  background-image: radial-gradient(#C9E2F5 1.5px, transparent 1.5px);
+  background-size: 20px 20px;
+  background-attachment: fixed;
+}
+
+.font-doodle {
+  font-family: var(--font-doodle);
+}
+
+/* Notebook Marker Highlight Effect */
+.marker-highlight {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.marker-highlight::after {
+  content: "";
+  position: absolute;
+  bottom: 2px;
+  left: -4px;
+  right: -4px;
+  height: 12px;
+  background-color: var(--notebook-red);
+  opacity: 0.85;
+  z-index: -1;
+  border-radius: 4px;
+  transform: rotate(-1deg);
+}
+
+/* Custom dashed coupon border style */
+.coupon-border {
+  border: 2px dashed #94A3B8;
+}
+
+/* Pinned index card tilt variations */
+.card-pinned-left {
+  transform: rotate(0deg);
+}
+
+.card-pinned-right {
+  transform: rotate(0deg);
+}
+
+.card-pinned-left:hover,
+.card-pinned-right:hover {
+  transform: rotate(0deg) translateY(-4px);
+}

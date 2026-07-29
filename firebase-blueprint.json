@@ -1,0 +1,31 @@
+{
+  "entities": {
+    "Listing": {
+      "title": "Listing",
+      "description": "Used items posted by students for sale on campus",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "enum": ["Books", "Cycles", "Electronics", "Other"] },
+        "price": { "type": "number" },
+        "condition": { "type": "string", "enum": ["Like New", "Good", "Fair"] },
+        "description": { "type": "string", "maxLength": 1000 },
+        "imageUrl": { "type": "string" },
+        "imagePath": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "sellerId": { "type": "string" },
+        "sellerName": { "type": "string" },
+        "sellerPhoto": { "type": "string" },
+        "isSold": { "type": "boolean" }
+      },
+      "required": ["name", "category", "price", "condition", "description", "sellerId", "sellerName", "isSold"]
+    }
+  },
+  "firestore": {
+    "/listings/{listingId}": {
+      "schema": "Listing",
+      "description": "Public marketplace listings for students"
+    }
+  }
+}

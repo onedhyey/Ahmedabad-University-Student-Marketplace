@@ -1,0 +1,13 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /listings/{listingId} {
+      // Anyone can view campus listings
+      allow read: if true;
+      // Only authenticated users can create a listing, setting themselves as the seller
+      allow create: if request.auth != null && request.resource.data.sellerId == request.auth.uid;
+      // Only the seller can update or delete their listing
+      allow update, delete: if request.auth != null && resource.data.sellerId == request.auth.uid;
+    }
+  }
+}
