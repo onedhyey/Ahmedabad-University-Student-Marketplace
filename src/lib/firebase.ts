@@ -19,6 +19,10 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({
+  prompt: 'select_account',
+  hd: 'ahduni.edu.in'
+});
 
 // Error handler helper
 export enum OperationType {
@@ -54,6 +58,11 @@ export function isAUStudent(user: User | null): boolean {
 // Sign in with Google with domain check
 export async function signInWithGoogleAU(): Promise<{ user: User | null; isAllowed: boolean }> {
   try {
+    // Always force Google's account chooser screen
+    googleProvider.setCustomParameters({
+      prompt: 'select_account',
+      hd: 'ahduni.edu.in'
+    });
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
     if (!isAUStudent(user)) {

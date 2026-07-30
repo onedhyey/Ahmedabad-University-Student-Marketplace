@@ -1,8 +1,24 @@
-import { collection, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, getDocs, setDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from './firebase';
+import habitsImg from '../assets/7_habits_book.png';
 
 export const SEED_LISTINGS = [
   {
+    id: "seed_7_habits_covey",
+    name: "The 7 Habits Of Highly Effective People by Stephen Covey",
+    category: "Books",
+    price: 350,
+    condition: "Good",
+    description: "The book is in good condition with only minor signs of use. All pages are intact, with no missing pages or major damage. Perfect for anyone interested in productivity, leadership, or personal growth.\n\nFeel free to reach out through AUSM if you have any questions before placing your order.",
+    imageUrl: habitsImg,
+    imagePath: "",
+    sellerId: "seed_seller_covey",
+    sellerName: "Kavya Patel",
+    sellerPhoto: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+    isSold: false
+  },
+  {
+    id: "seed_dsa_clrs",
     name: "DSA Textbook (Cormen - CLRS 3rd Ed)",
     category: "Books",
     price: 650,
@@ -16,6 +32,7 @@ export const SEED_LISTINGS = [
     isSold: false
   },
   {
+    id: "seed_hero_cycle",
     name: "Hero Sprint City Bicycle (21-Speed)",
     category: "Cycles",
     price: 3800,
@@ -29,6 +46,7 @@ export const SEED_LISTINGS = [
     isSold: false
   },
   {
+    id: "seed_casio_calc",
     name: "Casio FX-991EX ClassWiz Scientific Calculator",
     category: "Electronics",
     price: 850,
@@ -42,6 +60,7 @@ export const SEED_LISTINGS = [
     isSold: false
   },
   {
+    id: "seed_chem_coat",
     name: "AU Chemistry Lab Coat & Safety Goggles",
     category: "Other",
     price: 350,
@@ -56,20 +75,50 @@ export const SEED_LISTINGS = [
   }
 ];
 
+const VALID_SEED_IDS = new Set(SEED_LISTINGS.map(item => item.id));
+let isSeedingRunning = false;
+
 export async function seedInitialListingsIfEmpty() {
+  if (isSeedingRunning) return;
+  isSeedingRunning = true;
+
   try {
     const querySnapshot = await getDocs(collection(db, 'listings'));
+
     if (querySnapshot.empty) {
-      console.log("Seeding initial AU campus listings...");
+      console.log("Seeding initial AU campus listings with deterministic IDs...");
       for (const item of SEED_LISTINGS) {
-        await addDoc(collection(db, 'listings'), {
-          ...item,
+        const { id, ...data } = item;
+        await setDoc(doc(db, 'listings', id), {
+          ...data,
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });
       }
+    } else {
+      // Clean up any legacy duplicate seed items from previous addDoc runs
+      const deletePromises: Promise<void>[] = [];
+      querySnapshot.docs.forEach((docSnap) => {
+        const data = docSnap.data();
+        const docId = docSnap.id;
+        const sellerId = data.sellerId || '';
+        const isSeedSeller = sellerId.startsWith('seed_seller_');
+
+        // If it was created as a seed item but doesn't match our deterministic seed IDs, it's a legacy duplicate
+        if (isSeedSeller && !VALID_SEED_IDS.has(docId)) {
+          console.log(`Cleaning up legacy duplicate seed document ${docId}...`);
+          deletePromises.push(deleteDoc(doc(db, 'listings', docId)));
+        }
+      });
+
+      if (deletePromises.length > 0) {
+        await Promise.all(deletePromises);
+      }
     }
   } catch (error) {
     console.warn("Could not seed listings (might be offline or Firestore rules):", error);
+  } finally {
+    isSeedingRunning = false;
   }
 }
+

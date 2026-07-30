@@ -3,7 +3,7 @@ import { User } from 'firebase/auth';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, processAndUploadImage, signInWithGoogleAU, handleFirestoreError, OperationType } from '../lib/firebase';
 import { ListingCategory, ListingCondition } from '../types';
-import { PlusCircle, Send, Image as ImageIcon, Sparkles, AlertCircle, UploadCloud, CheckCircle2, Zap } from 'lucide-react';
+import { PlusCircle, Send, Image as ImageIcon, Sparkles, AlertCircle, UploadCloud, CheckCircle2, Zap, HelpCircle, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
 
 interface SellFormProps {
   user: User | null;
@@ -26,6 +26,7 @@ export const SellForm: React.FC<SellFormProps> = ({ user, onShowDomainWarning, o
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [showAccountHelp, setShowAccountHelp] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -315,6 +316,54 @@ export const SellForm: React.FC<SellFormProps> = ({ user, onShowDomainWarning, o
             </div>
           )}
 
+          {/* 2 & 3. Unauthenticated Notice & Help Info */}
+          {!user && (
+            <div className="bg-[#C9E2F5]/30 border-2 border-[#1B3A5C] rounded-2xl p-4 my-4 space-y-3">
+              <div className="flex items-start gap-2.5">
+                <div className="w-5 h-5 rounded-full bg-[#1B3A5C] text-white flex items-center justify-center text-xs font-black shrink-0 mt-0.5">
+                  !
+                </div>
+                <div>
+                  <h4 className="font-extrabold text-xs sm:text-sm text-[#1B3A5C] leading-snug">
+                    Use your Ahmedabad University Google account to continue.
+                  </h4>
+                  <p className="text-xs font-medium text-[#1B3A5C]/90 leading-relaxed mt-0.5">
+                    Only <span className="font-black underline decoration-[#800020] text-[#800020]">@ahduni.edu.in</span> email addresses are allowed to access AUSM. If you sign in with any other Google account, access will be denied.
+                  </p>
+                </div>
+              </div>
+
+              {/* 3. Help icon and muted text block */}
+              <div className="border-t border-[#1B3A5C]/20 pt-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowAccountHelp(!showAccountHelp)}
+                  className="w-full text-left flex items-center justify-between text-xs font-bold text-slate-600 hover:text-[#1B3A5C] transition-colors cursor-pointer group"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <HelpCircle className="w-4 h-4 text-[#800020] shrink-0" />
+                  </span>
+                  {showAccountHelp ? (
+                    <ChevronUp className="w-3.5 h-3.5 text-slate-400" />
+                  ) : (
+                    <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                  )}
+                </button>
+
+                {showAccountHelp && (
+                  <div className="mt-2 p-3 bg-white/90 border border-slate-300 rounded-xl text-[11px] font-medium text-slate-600 space-y-1 leading-relaxed animate-in fade-in duration-150">
+                    <p>
+                      Signed in with the wrong Google account earlier? Your browser may automatically reuse that account.
+                    </p>
+                    <p className="font-semibold text-slate-700">
+                      To choose a different account, clear this website's cookies/site data and then try signing in again.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* Submit Button */}
           <div className="pt-2">
             <button
@@ -330,7 +379,7 @@ export const SellForm: React.FC<SellFormProps> = ({ user, onShowDomainWarning, o
               ) : (
                 <>
                   <Sparkles className="w-5 h-5" />
-                  <span>{user ? 'Post Listing Now' : 'Sign in & Post Listing'}</span>
+                  <span>{user ? 'Post Listing Now' : 'Sign in with Google & Post Listing'}</span>
                 </>
               )}
             </button>

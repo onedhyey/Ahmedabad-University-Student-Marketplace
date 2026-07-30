@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
-import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { collection, onSnapshot } from 'firebase/firestore';
 import { auth, db, isAUStudent, signOutUser, handleFirestoreError, OperationType } from './lib/firebase';
 import { Listing } from './types';
-import { seedInitialListingsIfEmpty } from './lib/seed';
+import { seedInitialListingsIfEmpty, SEED_LISTINGS } from './lib/seed';
 
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
@@ -11,6 +11,7 @@ import { SellForm } from './components/SellForm';
 import { ListingsSection } from './components/ListingsSection';
 import { MessageModal } from './components/MessageModal';
 import { DomainErrorToast } from './components/DomainErrorToast';
+import { SignInModal } from './components/SignInModal';
 import { Footer } from './components/Footer';
 import { TermsPage } from './TermsPage';
 import { GuidePage } from './components/GuidePage';
@@ -26,6 +27,7 @@ export default function App() {
   const [activeTab, setActiveTab] = useState<'all' | 'favourites' | 'my-listings'>('all');
   const [selectedMessageListing, setSelectedMessageListing] = useState<Listing | null>(null);
   const [showDomainWarning, setShowDomainWarning] = useState(false);
+  const [showSignInModal, setShowSignInModal] = useState(false);
 
   const [view, setView] = useState<'marketplace' | 'guide' | 'discounts' | 'terms' | 'manifesto'>(() => {
     if (typeof window !== 'undefined') {
@@ -159,18 +161,16 @@ export default function App() {
   useEffect(() => {
     seedInitialListingsIfEmpty();
 
-    const q = query(collection(db, 'listings'), orderBy('createdAt', 'desc'));
-    
     const unsubscribe = onSnapshot(
-      q,
+      collection(db, 'listings'),
       (snapshot) => {
-        const fetched: Listing[] = snapshot.docs.map((docSnap) => {
+        const rawListings: Listing[] = snapshot.docs.map((docSnap) => {
           const data = docSnap.data();
           return {
             id: docSnap.id,
             name: data.name || '',
             category: data.category || 'Other',
-            price: data.price || 0,
+            price: Number(data.price) || 0,
             condition: data.condition || 'Good',
             description: data.description || '',
             imageUrl: data.imageUrl || '',
@@ -184,12 +184,57 @@ export default function App() {
           };
         });
 
-        setListings(fetched);
+        // Deduplicate by doc ID and content signature (name + price + sellerId)
+        const seenIds = new Set<string>();
+        const seenContent = new Set<string>();
+        const uniqueListings: Listing[] = [];
+
+        for (const item of rawListings) {
+          if (seenIds.has(item.id)) continue;
+
+          const contentKey = `${item.name.trim().toLowerCase()}_${item.price}_${item.sellerId}`;
+          if (seenContent.has(contentKey)) continue;
+
+          seenIds.add(item.id);
+          seenContent.add(contentKey);
+          uniqueListings.push(item);
+        }
+
+        // Sort by createdAt descending (safely handling null/pending timestamps)
+        uniqueListings.sort((a, b) => {
+          const getTime = (val: any) => {
+            if (!val) return 0;
+            if (typeof val.toMillis === 'function') return val.toMillis();
+            if (typeof val.seconds === 'number') return val.seconds * 1000;
+            if (val instanceof Date) return val.getTime();
+            return 0;
+          };
+          return getTime(b.createdAt) - getTime(a.createdAt);
+        });
+
+        if (uniqueListings.length === 0) {
+          setListings(SEED_LISTINGS.map((item) => ({
+            ...item,
+            category: item.category as any,
+            condition: item.condition as any,
+            createdAt: null,
+            updatedAt: null
+          })));
+        } else {
+          setListings(uniqueListings);
+        }
         setListingsLoading(false);
       },
       (error) => {
         console.error("Listings real-time subscription error:", error);
         handleFirestoreError(error, OperationType.LIST, 'listings');
+        setListings(SEED_LISTINGS.map((item) => ({
+          ...item,
+          category: item.category as any,
+          condition: item.condition as any,
+          createdAt: null,
+          updatedAt: null
+        })));
         setListingsLoading(false);
       }
     );
@@ -237,7 +282,7 @@ export default function App() {
           }
         }}
         myListingsCount={myListingsCount}
-        onOpenSignIn={() => {}}
+        onOpenSignIn={() => setShowSignInModal(true)}
         onShowDomainWarning={() => setShowDomainWarning(true)}
         onNavigateHome={navigateToHome}
         onOpenGuide={navigateToGuide}
@@ -304,6 +349,12 @@ export default function App() {
       />
 
       {/* Modals & Popups */}
+      <SignInModal
+        isOpen={showSignInModal}
+        onClose={() => setShowSignInModal(false)}
+        onShowDomainWarning={() => setShowDomainWarning(true)}
+      />
+
       {selectedMessageListing && (
         <MessageModal
           listing={selectedMessageListing}

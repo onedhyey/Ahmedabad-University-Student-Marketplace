@@ -69,18 +69,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSignIn = async () => {
-    setLoading(true);
-    try {
-      const res = await signInWithGoogleAU();
-      if (!res.isAllowed) {
-        onShowDomainWarning();
-      }
-    } catch (err) {
-      console.error("Auth error:", err);
-    } finally {
-      setLoading(false);
-    }
+  const handleSignIn = () => {
+    onOpenSignIn();
   };
 
   const handleSignOut = async () => {
@@ -277,20 +267,21 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setDropdownOpen(!dropdownOpen);
                     setResourcesOpen(false);
                   }}
-                  className="flex items-center gap-2 bg-[#FAFBFC] border-2 border-[#1B3A5C] hover:border-[#800020] px-3 py-1.5 rounded-full shadow-xs transition-all active:scale-95"
+                  className="flex items-center gap-1.5 sm:gap-2 bg-[#FAFBFC] border-2 border-[#1B3A5C] hover:border-[#800020] px-2.5 sm:px-3 py-1.5 rounded-full shadow-xs transition-all active:scale-95 cursor-pointer"
+                  title={`Account: ${user.displayName || 'User'}`}
                 >
                   {user.photoURL ? (
                     <img
                       src={user.photoURL}
                       alt={user.displayName || 'User'}
-                      className="w-6 h-6 rounded-full border border-[#1B3A5C] object-cover"
+                      className="w-6 h-6 rounded-full border border-[#1B3A5C] object-cover shrink-0"
                     />
                   ) : (
-                    <div className="w-6 h-6 rounded-full bg-[#595B5A] flex items-center justify-center text-white font-bold text-xs">
+                    <div className="w-6 h-6 rounded-full bg-[#595B5A] flex items-center justify-center text-white font-bold text-xs shrink-0">
                       {firstName[0]}
                     </div>
                   )}
-                  <span className="text-xs font-bold text-[#1B3A5C] max-w-[100px] truncate">
+                  <span className="text-xs font-bold text-[#1B3A5C] max-w-[100px] truncate hidden sm:inline">
                     {firstName}
                   </span>
                   <ChevronDown className={`w-3.5 h-3.5 text-[#1B3A5C] transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
@@ -305,7 +296,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     <div className="px-3 py-2 border-b border-slate-200 mb-1">
                       <p className="text-xs font-bold text-[#1B3A5C] truncate">{user.displayName}</p>
                       <p className="text-[11px] text-slate-500 truncate flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600 inline" />
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600 inline shrink-0" />
                         {user.email}
                       </p>
                     </div>
@@ -365,10 +356,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 onClick={handleSignIn}
                 disabled={loading}
-                className="bg-[#800020] hover:bg-[#600018] border-2 border-[#800020] hover:border-[#600018] text-white text-xs sm:text-sm font-extrabold px-4 sm:px-5 py-1.5 rounded-full transition-all active:scale-95 shadow-xs flex items-center gap-2 hover:shadow-md cursor-pointer disabled:opacity-50"
+                title={loading ? 'Signing in...' : 'Sign in'}
+                aria-label={loading ? 'Signing in...' : 'Sign in'}
+                className="bg-[#800020] hover:bg-[#600018] border-2 border-[#800020] hover:border-[#600018] text-white text-xs sm:text-sm font-extrabold px-3 sm:px-5 py-1.5 rounded-full transition-all active:scale-95 shadow-xs flex items-center gap-2 hover:shadow-md cursor-pointer disabled:opacity-50"
               >
-                <LogIn className="w-4 h-4" />
-                <span>{loading ? 'Signing in...' : 'Sign in'}</span>
+                <LogIn className="w-4 h-4 shrink-0" />
+                <span className="hidden sm:inline">{loading ? 'Signing in...' : 'Sign in'}</span>
               </button>
             )}
 
