@@ -1,8 +1,6 @@
 {
-  "name": "AUSM: Ahmedabad University Student Marketplace",
-  "description": "AUSM helps students save money, reduce waste, and strengthen the Ahmedabad University community through trusted peer-to-peer commerce.",
+  "name": "Campus Cart",
+  "description": "AI Campus Marketplace for Ahmedabad University students to buy and sell used items.",
   "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
