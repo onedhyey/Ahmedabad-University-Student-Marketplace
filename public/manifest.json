@@ -1,0 +1,17 @@
+{
+  "name": "AUSM",
+  "short_name": "AUSM",
+  "description": "The verified student-to-student marketplace for Ahmedabad University.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFBFC",
+  "theme_color": "#1B3A5C",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
