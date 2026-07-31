@@ -29,25 +29,14 @@
       })();
     </script>
     <title>AUSM — Ahmedabad University Student Marketplace</title>
-    <!-- Web App & PWA Settings -->
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="application-name" content="AUSM" />
-    <meta name="apple-mobile-web-app-title" content="AUSM" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="theme-color" content="#1B3A5C" />
-
-    <!-- Favicon links for Google Search Bot & Browsers -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M 4,46 L 50,4 L 96,46 L 86,46 L 50,13 L 14,46 Z M 18,46 L 50,18 L 82,46 L 72,46 L 50,27 L 28,46 Z M 32,46 L 50,32 L 68,46 L 58,46 L 50,40 L 42,46 Z M 32,54 L 50,68 L 68,54 L 58,54 L 50,60 L 42,54 Z M 18,54 L 50,82 L 82,54 L 72,54 L 50,73 L 28,54 Z M 4,54 L 50,96 L 96,54 L 86,54 L 50,87 L 14,54 Z' fill='%23800020'/></svg>" />
 
     <!-- Open Graph / Social Media Meta Tags -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="AUSM — Ahmedabad University Student Marketplace" />
+    <meta property="og:title" content="Campus Cart — Ahmedabad University Marketplace" />
     <meta property="og:description" content="Sell it. Find it. Campus only. Buy & sell books, cycles, and electronics directly with fellow AU students." />
-    <meta property="og:image" content="https://ausm.online/favicon.svg" />
-    <meta property="og:site_name" content="AUSM" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80" />
+    <meta property="og:site_name" content="Campus Cart AU" />
 
     <!-- Google Fonts: Plus Jakarta Sans & Caveat -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -55,21 +44,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   </head>
   <body class="bg-[#FAFBFC] text-[#1B3A5C] antialiased selection:bg-[#FFD93D] selection:text-[#1B3A5C]">
-    <div id="root">
-      <div style="position: fixed; inset: 0; background-color: #FAFBFC; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
-        <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 4,46 L 50,4 L 96,46 L 86,46 L 50,13 L 14,46 Z" fill="#800020" />
-          <path d="M 18,46 L 50,18 L 82,46 L 72,46 L 50,27 L 28,46 Z" fill="#800020" />
-          <path d="M 32,46 L 50,32 L 68,46 L 58,46 L 50,40 L 42,46 Z" fill="#800020" />
-          <path d="M 32,54 L 50,68 L 68,54 L 58,54 L 50,60 L 42,54 Z" fill="#800020" />
-          <path d="M 18,54 L 50,82 L 82,54 L 72,54 L 50,73 L 28,54 Z" fill="#800020" />
-          <path d="M 4,54 L 50,96 L 96,54 L 86,54 L 50,87 L 14,54 Z" fill="#800020" />
-        </svg>
-        <span style="margin-top: 16px; font-size: 32px; font-weight: 900; letter-spacing: 0.05em; color: #1B3A5C;">
-          AUSM
-        </span>
-      </div>
-    </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
