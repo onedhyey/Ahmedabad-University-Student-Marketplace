@@ -1,36 +1,17 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, User } from 'firebase/auth';
-import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, deleteDoc, doc, setDoc, serverTimestamp, getDocs } from 'firebase/firestore';
+import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp, getDocs } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { Listing, ListingCategory, ListingCondition } from '../types';
 
-const requiredEnvVars = [
-  'VITE_FIREBASE_API_KEY',
-  'VITE_FIREBASE_AUTH_DOMAIN',
-  'VITE_FIREBASE_PROJECT_ID',
-  'VITE_FIREBASE_STORAGE_BUCKET',
-  'VITE_FIREBASE_MESSAGING_SENDER_ID',
-  'VITE_FIREBASE_APP_ID',
-  'VITE_FIREBASE_MEASUREMENT_ID',
-] as const;
-
-const missingEnvVars = requiredEnvVars.filter((key) => !import.meta.env[key]);
-
-if (missingEnvVars.length > 0) {
-  throw new Error(
-    `Missing required Firebase environment variable(s): ${missingEnvVars.join(', ')}. ` +
-    'Set these in your .env file (see .env.example) before starting the app.'
-  );
-}
-
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyA7Mw7YZOhomDAU4Dk60W0mFlHaFMEy3jM",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "au-campus-marketplace.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "au-campus-marketplace",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "au-campus-marketplace.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "923692004442",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:923692004442:web:8c9fe7c961469b2fe55463",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-X6RWR90CEM"
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
@@ -39,8 +20,7 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
-  prompt: 'select_account',
-  hd: 'ahduni.edu.in'
+  prompt: 'select_account'
 });
 
 // Error handler helper
@@ -79,8 +59,7 @@ export async function signInWithGoogleAU(): Promise<{ user: User | null; isAllow
   try {
     // Always force Google's account chooser screen
     googleProvider.setCustomParameters({
-      prompt: 'select_account',
-      hd: 'ahduni.edu.in'
+      prompt: 'select_account'
     });
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
@@ -97,26 +76,6 @@ export async function signInWithGoogleAU(): Promise<{ user: User | null; isAllow
 
 export async function signOutUser() {
   return firebaseSignOut(auth);
-}
-
-// Record/refresh a lightweight profile doc for every verified AU student who
-// signs in. Used to power the live "AU students signed up" homepage stat —
-// it's intentionally separate from Firebase Auth's own user list, which
-// client code can't read or count directly.
-export async function upsertStudentProfile(user: User) {
-  try {
-    await setDoc(
-      doc(db, 'students', user.uid),
-      {
-        email: user.email,
-        displayName: user.displayName || 'AU Student',
-        lastSeenAt: serverTimestamp()
-      },
-      { merge: true }
-    );
-  } catch (error) {
-    console.warn('Could not upsert student profile:', error);
-  }
 }
 
 // Client-side image resize helper: max edge 1200px, JPEG quality 0.8

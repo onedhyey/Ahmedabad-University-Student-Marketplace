@@ -1,30 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { User } from 'firebase/auth';
-import { collection, addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db, processAndUploadImage, signInWithGoogleAU, handleFirestoreError, OperationType } from '../lib/firebase';
-import { Listing, ListingCategory, ListingCondition } from '../types';
-import { PlusCircle, Send, Image as ImageIcon, Sparkles, AlertCircle, UploadCloud, CheckCircle2, Zap, HelpCircle, ChevronDown, ChevronUp, ShieldCheck, Pencil, X } from 'lucide-react';
+import { ListingCategory, ListingCondition } from '../types';
+import { PlusCircle, Send, Image as ImageIcon, Sparkles, AlertCircle, UploadCloud, CheckCircle2, Zap, HelpCircle, ChevronDown, ChevronUp, ShieldCheck } from 'lucide-react';
 
 interface SellFormProps {
   user: User | null;
   onShowDomainWarning: () => void;
   onListingAdded: (listingId: string) => void;
-  editingListing?: Listing | null;
-  onListingUpdated?: (listingId: string) => void;
-  onCancelEdit?: () => void;
 }
 
 const CATEGORIES: ListingCategory[] = ['Books', 'Cycles', 'Electronics', 'Other'];
 const CONDITIONS: ListingCondition[] = ['Like New', 'Good', 'Fair'];
 
-export const SellForm: React.FC<SellFormProps> = ({
-  user,
-  onShowDomainWarning,
-  onListingAdded,
-  editingListing = null,
-  onListingUpdated,
-  onCancelEdit
-}) => {
+export const SellForm: React.FC<SellFormProps> = ({ user, onShowDomainWarning, onListingAdded }) => {
   const [name, setName] = useState('');
   const [category, setCategory] = useState<ListingCategory>('Books');
   const [price, setPrice] = useState('');
@@ -37,42 +27,6 @@ export const SellForm: React.FC<SellFormProps> = ({
   const [uploadProgress, setUploadProgress] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showAccountHelp, setShowAccountHelp] = useState(false);
-
-  const isEditing = !!editingListing;
-
-  // Pre-fill the form whenever a listing is opened for editing
-  useEffect(() => {
-    if (editingListing) {
-      setName(editingListing.name);
-      setCategory(editingListing.category);
-      setPrice(String(editingListing.price));
-      setCondition(editingListing.condition);
-      setDescription(editingListing.description || '');
-      setSelectedFile(null);
-      setImagePreview(editingListing.imageUrl || null);
-      setErrorMessage(null);
-
-      // Scroll the form into view so the person sees it's now in edit mode
-      const formEl = document.getElementById('sell-form-section');
-      formEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, [editingListing]);
-
-  const resetForm = () => {
-    setName('');
-    setPrice('');
-    setCategory('Books');
-    setCondition('Like New');
-    setDescription('');
-    setSelectedFile(null);
-    setImagePreview(null);
-  };
-
-  const handleCancelEdit = () => {
-    resetForm();
-    setErrorMessage(null);
-    onCancelEdit?.();
-  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -93,56 +47,6 @@ export const SellForm: React.FC<SellFormProps> = ({
     const parsedPrice = parseFloat(price);
     if (isNaN(parsedPrice) || parsedPrice <= 0) {
       setErrorMessage('Please enter a valid price in Rupees (₹).');
-      return;
-    }
-
-    // Editing an existing listing doesn't require re-authentication — the
-    // person must already be signed in as the owner to have reached the form.
-    if (isEditing && editingListing) {
-      if (!user || user.uid !== editingListing.sellerId) {
-        setErrorMessage('You can only edit your own listings.');
-        return;
-      }
-
-      setIsSubmitting(true);
-      setUploadProgress('Saving changes...');
-
-      try {
-        const listingId = editingListing.id;
-        const sellerId = editingListing.sellerId;
-
-        const updates: Record<string, unknown> = {
-          name: name.trim(),
-          category,
-          price: parsedPrice,
-          condition,
-          description: description.trim(),
-          updatedAt: serverTimestamp()
-        };
-
-        // If a new image was chosen, replace it in Storage & update the doc
-        if (selectedFile) {
-          setUploadProgress('Resizing & uploading new photo...');
-          const uploadRes = await processAndUploadImage(selectedFile, sellerId, listingId);
-          updates.imageUrl = uploadRes.imageUrl;
-          updates.imagePath = uploadRes.imagePath;
-        }
-
-        await updateDoc(doc(db, 'listings', listingId), updates);
-
-        resetForm();
-        setUploadProgress(null);
-
-        onListingUpdated ? onListingUpdated(listingId) : onListingAdded(listingId);
-        onCancelEdit?.();
-      } catch (err) {
-        console.error('Error updating listing:', err);
-        handleFirestoreError(err, OperationType.UPDATE, `listings/${editingListing.id}`);
-        setErrorMessage('Failed to save changes. Please try again.');
-      } finally {
-        setIsSubmitting(false);
-        setUploadProgress(null);
-      }
       return;
     }
 
@@ -201,6 +105,7 @@ export const SellForm: React.FC<SellFormProps> = ({
         uploadedPath = uploadRes.imagePath;
 
         // Update document with image URLs
+        const { updateDoc, doc } = await import('firebase/firestore');
         await updateDoc(doc(db, 'listings', listingId), {
           imageUrl: uploadedUrl,
           imagePath: uploadedPath,
@@ -209,7 +114,11 @@ export const SellForm: React.FC<SellFormProps> = ({
       }
 
       // Reset form
-      resetForm();
+      setName('');
+      setPrice('');
+      setDescription('');
+      setSelectedFile(null);
+      setImagePreview(null);
       setUploadProgress(null);
 
       // Trigger callback & smooth scroll
@@ -234,32 +143,21 @@ export const SellForm: React.FC<SellFormProps> = ({
         <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-4 mb-6">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-full bg-[#800020] text-white flex items-center justify-center font-bold">
-              {isEditing ? <Pencil className="w-4 h-4" /> : <PlusCircle className="w-5 h-5" />}
+              <PlusCircle className="w-5 h-5" />
             </div>
             <div>
               <h2 className="text-xl sm:text-2xl font-extrabold text-[#1B3A5C]">
-                {isEditing ? 'Edit your listing' : 'Sell an item'}
+                Sell an item
               </h2>
               <p className="text-xs text-slate-500 font-medium">
-                {isEditing ? `Updating "${editingListing?.name}"` : 'Pass it on to another student at Ahmedabad University'}
+                Pass it on to another student at Ahmedabad University
               </p>
             </div>
           </div>
-          {isEditing ? (
-            <button
-              type="button"
-              onClick={handleCancelEdit}
-              className="inline-flex items-center gap-1.5 bg-[#FAFBFC] border-2 border-[#1B3A5C] text-[#1B3A5C] text-xs font-bold px-3 py-1.5 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-            >
-              <X className="w-3.5 h-3.5" />
-              <span>Cancel Edit</span>
-            </button>
-          ) : (
-            <span className="hidden sm:inline-flex items-center gap-1.5 bg-[#595B5A] text-white text-xs font-bold px-3 py-1 rounded-full border border-[#1B3A5C]">
-              <span>Instant Listing</span>
-              <Zap className="w-3.5 h-3.5 text-white fill-white" />
-            </span>
-          )}
+          <span className="hidden sm:inline-flex items-center gap-1.5 bg-[#595B5A] text-white text-xs font-bold px-3 py-1 rounded-full border border-[#1B3A5C]">
+            <span>Instant Listing</span>
+            <Zap className="w-3.5 h-3.5 text-white fill-white" />
+          </span>
         </div>
 
         {errorMessage && (
@@ -467,21 +365,16 @@ export const SellForm: React.FC<SellFormProps> = ({
           )}
 
           {/* Submit Button */}
-          <div className="pt-2 flex flex-col sm:flex-row gap-2">
+          <div className="pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="flex-1 bg-[#800020] hover:bg-[#600018] text-white font-black text-base px-6 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="w-full bg-[#800020] hover:bg-[#600018] text-white font-black text-base px-6 py-3.5 rounded-full shadow-md hover:shadow-lg transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {isSubmitting ? (
                 <>
                   <Send className="w-5 h-5 animate-spin" />
-                  <span>{isEditing ? 'Saving Changes...' : 'Posting Listing...'}</span>
-                </>
-              ) : isEditing ? (
-                <>
-                  <Pencil className="w-5 h-5" />
-                  <span>Save Changes</span>
+                  <span>Posting Listing...</span>
                 </>
               ) : (
                 <>
@@ -490,16 +383,6 @@ export const SellForm: React.FC<SellFormProps> = ({
                 </>
               )}
             </button>
-            {isEditing && (
-              <button
-                type="button"
-                onClick={handleCancelEdit}
-                disabled={isSubmitting}
-                className="bg-white border-2 border-[#1B3A5C] text-[#1B3A5C] font-black text-base px-6 py-3.5 rounded-full hover:bg-slate-100 transition-all cursor-pointer disabled:opacity-50"
-              >
-                Cancel
-              </button>
-            )}
           </div>
 
         </form>

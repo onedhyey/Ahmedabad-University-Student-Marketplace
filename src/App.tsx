@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot } from 'firebase/firestore';
-import { auth, db, isAUStudent, signOutUser, upsertStudentProfile, handleFirestoreError, OperationType } from './lib/firebase';
+import { auth, db, isAUStudent, signOutUser, handleFirestoreError, OperationType } from './lib/firebase';
 import { Listing } from './types';
 import { seedInitialListingsIfEmpty, SEED_LISTINGS } from './lib/seed';
 
+import { Logo } from './components/Logo';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { SellForm } from './components/SellForm';
 import { ListingsSection } from './components/ListingsSection';
 import { MessageModal } from './components/MessageModal';
-import { ReportModal } from './components/ReportModal';
 import { DomainErrorToast } from './components/DomainErrorToast';
 import { SignInModal } from './components/SignInModal';
 import { Footer } from './components/Footer';
@@ -19,6 +19,19 @@ import { GuidePage } from './components/GuidePage';
 import { DiscountsPage } from './components/DiscountsPage';
 
 export default function App() {
+  const [showSplash, setShowSplash] = useState(true);
+  const [splashFading, setSplashFading] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashFading(true);
+      setTimeout(() => {
+        setShowSplash(false);
+      }, 400);
+    }, 700);
+    return () => clearTimeout(timer);
+  }, []);
+
   const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
@@ -27,8 +40,6 @@ export default function App() {
 
   const [activeTab, setActiveTab] = useState<'all' | 'favourites' | 'my-listings'>('all');
   const [selectedMessageListing, setSelectedMessageListing] = useState<Listing | null>(null);
-  const [selectedReportListing, setSelectedReportListing] = useState<Listing | null>(null);
-  const [editingListing, setEditingListing] = useState<Listing | null>(null);
   const [showDomainWarning, setShowDomainWarning] = useState(false);
   const [showSignInModal, setShowSignInModal] = useState(false);
 
@@ -150,7 +161,6 @@ export default function App() {
           setShowDomainWarning(true);
         } else {
           setUser(currentUser);
-          upsertStudentProfile(currentUser);
         }
       } else {
         setUser(null);
@@ -250,11 +260,6 @@ export default function App() {
     ? listings.filter((item) => item.sellerId === user.uid).length
     : 0;
 
-  const handleListingUpdated = (listingId: string) => {
-    showToast('Listing updated successfully!');
-    setEditingListing(null);
-  };
-
   const handleListingAdded = (listingId: string) => {
     setNewlyAddedId(listingId);
     showToast('Listing posted live to campus marketplace!');
@@ -273,6 +278,22 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col font-sans selection:bg-[#800020] selection:text-white">
       
+      {/* App Launch Splash Overlay */}
+      {showSplash && (
+        <div
+          className={`fixed inset-0 z-[9999] bg-[#FAFBFC] flex flex-col items-center justify-center transition-opacity duration-300 ease-out ${
+            splashFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
+          }`}
+        >
+          <div className="flex flex-col items-center animate-in zoom-in-95 duration-200">
+            <Logo className="w-20 h-20" color="#800020" />
+            <span className="mt-4 text-3xl font-black tracking-wider text-[#1B3A5C]">
+              AUSM
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Toast Popup Notification */}
       {toastMessage && (
         <div className="fixed top-20 right-4 z-50 bg-[#595B5A] border-2 border-[#1B3A5C] text-white font-extrabold text-xs px-4 py-3 rounded-2xl shadow-lg animate-in slide-in-from-top-4 duration-200">
@@ -333,9 +354,6 @@ export default function App() {
               user={user}
               onShowDomainWarning={() => setShowDomainWarning(true)}
               onListingAdded={handleListingAdded}
-              editingListing={editingListing}
-              onListingUpdated={handleListingUpdated}
-              onCancelEdit={() => setEditingListing(null)}
             />
 
             {/* (3) Listings Grid with Search, Filters & Tabs */}
@@ -345,8 +363,6 @@ export default function App() {
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               onOpenMessageModal={(listing) => setSelectedMessageListing(listing)}
-              onOpenReportModal={(listing) => setSelectedReportListing(listing)}
-              onEditListing={(listing) => setEditingListing(listing)}
               onShowToast={showToast}
               newlyAddedId={newlyAddedId}
             />
@@ -374,16 +390,6 @@ export default function App() {
           listing={selectedMessageListing}
           onClose={() => setSelectedMessageListing(null)}
           onShowToast={showToast}
-        />
-      )}
-
-      {selectedReportListing && (
-        <ReportModal
-          listing={selectedReportListing}
-          user={user}
-          onClose={() => setSelectedReportListing(null)}
-          onShowToast={showToast}
-          onShowDomainWarning={() => setShowDomainWarning(true)}
         />
       )}
 

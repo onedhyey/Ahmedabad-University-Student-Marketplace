@@ -17,12 +17,14 @@ export const SignInModal: React.FC<SignInModalProps> = ({
   onShowDomainWarning
 }) => {
   const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [showAccountHelp, setShowAccountHelp] = useState(false);
 
   if (!isOpen) return null;
 
   const handleSignIn = async () => {
     setLoading(true);
+    setErrorMsg(null);
     try {
       const res = await signInWithGoogleAU();
       if (!res.isAllowed || !res.user) {
@@ -35,6 +37,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({
     } catch (err: any) {
       if (err?.code !== 'auth/popup-closed-by-user') {
         console.error("Sign in error:", err);
+        setErrorMsg("Unable to complete sign-in. Please ensure popups are allowed and try again.");
       }
     } finally {
       setLoading(false);
@@ -85,6 +88,14 @@ export const SignInModal: React.FC<SignInModalProps> = ({
             Only <span className="font-black underline decoration-[#800020] text-[#800020]">@ahduni.edu.in</span> email addresses are allowed to access AUSM. If you sign in with any other Google account, access will be denied.
           </p>
         </div>
+
+        {/* Error message alert if present */}
+        {errorMsg && (
+          <div className="bg-red-50 border-2 border-red-200 text-red-800 rounded-2xl p-3 mb-4 text-xs font-semibold flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
+            <span>{errorMsg}</span>
+          </div>
+        )}
 
         {/* 1 & 2. Prominent Sign In With Google Button */}
         <div className="space-y-3 mb-4">

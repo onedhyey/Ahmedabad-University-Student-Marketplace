@@ -2,5 +2,5 @@
   "name": "Campus Cart",
   "description": "AI Campus Marketplace for Ahmedabad University students to buy and sell used items.",
   "requestFramePermissions": [],
-  "majorCapabilities": []
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

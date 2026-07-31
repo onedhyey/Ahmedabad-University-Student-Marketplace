@@ -3,7 +3,7 @@ import { User } from 'firebase/auth';
 import { Listing, ListingCategory } from '../types';
 import { deleteDoc, doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { db, deleteListingImage, handleFirestoreError, OperationType } from '../lib/firebase';
-import { Search, Heart, Share2, MessageCircle, Trash2, Tag, BookOpen, Bike, Zap, Package, Check, Sparkles, Ban, CheckCircle2, RotateCcw, Flag, Pencil } from 'lucide-react';
+import { Search, Heart, Share2, MessageCircle, Trash2, Tag, BookOpen, Bike, Zap, Package, Check, Sparkles, Ban, CheckCircle2, RotateCcw } from 'lucide-react';
 
 interface ListingsSectionProps {
   listings: Listing[];
@@ -11,8 +11,6 @@ interface ListingsSectionProps {
   activeTab: 'all' | 'favourites' | 'my-listings';
   setActiveTab: (tab: 'all' | 'favourites' | 'my-listings') => void;
   onOpenMessageModal: (listing: Listing) => void;
-  onOpenReportModal: (listing: Listing) => void;
-  onEditListing: (listing: Listing) => void;
   onShowToast: (msg: string) => void;
   newlyAddedId: string | null;
 }
@@ -25,8 +23,6 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
   activeTab,
   setActiveTab,
   onOpenMessageModal,
-  onOpenReportModal,
-  onEditListing,
   onShowToast,
   newlyAddedId
 }) => {
@@ -108,16 +104,6 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
       handleFirestoreError(err, OperationType.DELETE, `listings/${listing.id}`);
       onShowToast('Failed to delete listing.');
     }
-  };
-
-  const handleReport = (listing: Listing, e: React.MouseEvent) => {
-    e.stopPropagation();
-    onOpenReportModal(listing);
-  };
-
-  const handleEdit = (listing: Listing, e: React.MouseEvent) => {
-    e.stopPropagation();
-    onEditListing(listing);
   };
 
   const handleToggleSold = async (listing: Listing, e: React.MouseEvent) => {
@@ -357,15 +343,6 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                   />
                 </button>
 
-                {/* Report Listing Icon, below the favourite heart */}
-                <button
-                  onClick={(e) => handleReport(listing, e)}
-                  className="absolute top-14 right-3 z-30 bg-[#FAFBFC] border-2 border-[#1B3A5C] p-2 rounded-full shadow-xs hover:scale-110 active:scale-95 transition-transform cursor-pointer"
-                  title="Report this listing"
-                >
-                  <Flag className="w-4 h-4 text-[#1B3A5C] hover:text-[#800020] transition-colors" />
-                </button>
-
                 {/* Card Media Header */}
                 <div>
                   <div className={`w-full h-48 relative overflow-hidden border-b-2 border-[#1B3A5C] ${listing.isSold ? 'bg-slate-200' : 'bg-slate-100'}`}>
@@ -465,17 +442,6 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                   >
                     <Share2 className="w-3.5 h-3.5" />
                   </button>
-
-                  {/* Owner Edit action */}
-                  {isOwner && (
-                    <button
-                      onClick={(e) => handleEdit(listing, e)}
-                      className="p-2.5 bg-[#FAFBFC] border-2 border-[#1B3A5C] hover:bg-[#C9E2F5]/30 text-[#1B3A5C] rounded-full transition-colors cursor-pointer"
-                      title="Edit listing"
-                    >
-                      <Pencil className="w-3.5 h-3.5" />
-                    </button>
-                  )}
 
                   {/* Owner Mark as Sold / Available toggle */}
                   {isOwner && (
