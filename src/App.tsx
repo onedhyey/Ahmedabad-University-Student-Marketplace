@@ -8,6 +8,8 @@ import { seedInitialListingsIfEmpty, SEED_LISTINGS } from './lib/seed';
 import { Logo } from './components/Logo';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { FounderNote } from './components/FounderNote';
+import { DiscountsTeaser } from './components/DiscountsTeaser';
 import { SellForm } from './components/SellForm';
 import { ListingsSection } from './components/ListingsSection';
 import { MessageModal } from './components/MessageModal';
@@ -171,13 +173,22 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // 2. Seed initial items if empty & Realtime Firestore Subscription
+  // 2. Realtime Firestore Subscription (also handles one-time seed/cleanup,
+  // driven off this same snapshot payload rather than a separate read)
   useEffect(() => {
-    seedInitialListingsIfEmpty();
+    let hasCheckedSeedState = false;
 
     const unsubscribe = onSnapshot(
       collection(db, 'listings'),
       (snapshot) => {
+        // One-time seed / legacy-cleanup check per mount. Uses the docs we
+        // already fetched via this listener instead of an extra getDocs()
+        // collection read on every app load.
+        if (!hasCheckedSeedState) {
+          hasCheckedSeedState = true;
+          seedInitialListingsIfEmpty();
+        }
+
         const rawListings: Listing[] = snapshot.docs.map((docSnap) => {
           const data = docSnap.data();
           return {
@@ -198,30 +209,34 @@ export default function App() {
           };
         });
 
-        // Deduplicate by doc ID and content signature (name + price + sellerId)
+        // Deduplicate by doc ID only. Firestore snapshots are already unique
+        // per document ID, so this is a defensive no-op — we intentionally do
+        // NOT dedupe by name+price+sellerId anymore, since that previously
+        // hid legitimate listings (e.g. a seller listing two identical items
+        // at the same price, like two copies of the same textbook).
         const seenIds = new Set<string>();
-        const seenContent = new Set<string>();
         const uniqueListings: Listing[] = [];
 
         for (const item of rawListings) {
           if (seenIds.has(item.id)) continue;
-
-          const contentKey = `${item.name.trim().toLowerCase()}_${item.price}_${item.sellerId}`;
-          if (seenContent.has(contentKey)) continue;
-
           seenIds.add(item.id);
-          seenContent.add(contentKey);
           uniqueListings.push(item);
         }
 
-        // Sort by createdAt descending (safely handling null/pending timestamps)
+        // Sort by createdAt descending (safely handling null/pending timestamps).
+        // A pending write's serverTimestamp() hasn't resolved yet and comes
+        // through as null — treat it as "now" (computed once, outside the
+        // comparator, so it's stable across the whole sort) so a brand-new
+        // listing sorts to the top immediately instead of appearing at the
+        // bottom and then jumping to the top once the timestamp resolves.
+        const nowMs = Date.now();
         uniqueListings.sort((a, b) => {
           const getTime = (val: any) => {
-            if (!val) return 0;
+            if (!val) return nowMs;
             if (typeof val.toMillis === 'function') return val.toMillis();
             if (typeof val.seconds === 'number') return val.seconds * 1000;
             if (val instanceof Date) return val.getTime();
-            return 0;
+            return nowMs;
           };
           return getTime(b.createdAt) - getTime(a.createdAt);
         });
@@ -359,6 +374,7 @@ export default function App() {
             {/* (3) Listings Grid with Search, Filters & Tabs */}
             <ListingsSection
               listings={listings}
+              isLoading={listingsLoading}
               user={user}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
@@ -366,6 +382,16 @@ export default function App() {
               onShowToast={showToast}
               newlyAddedId={newlyAddedId}
             />
+
+            {/* (3.5) Note From the Founder (compact) */}
+            <section className="px-4 sm:px-6 mb-8">
+              <div className="max-w-4xl mx-auto">
+                <FounderNote variant="compact" onViewManifesto={navigateToManifesto} />
+              </div>
+            </section>
+
+            {/* (3.75) Student Discounts Teaser */}
+            <DiscountsTeaser onExploreDiscounts={navigateToDiscounts} />
           </>
         )}
       </main>
@@ -400,4 +426,3 @@ export default function App() {
     </div>
   );
 }
-

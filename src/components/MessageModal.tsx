@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Listing } from '../types';
-import { X, Send, Copy, Check, MessageSquare } from 'lucide-react';
+import { X, MessageCircle } from 'lucide-react';
 
 interface MessageModalProps {
   listing: Listing | null;
@@ -8,19 +8,21 @@ interface MessageModalProps {
   onShowToast: (msg: string) => void;
 }
 
+// AUSM's own WhatsApp contact number. Buyers message AUSM directly — never
+// the seller — so no seller phone number is ever collected or exposed.
+const AUSM_WHATSAPP_NUMBER = '918849064832'; // +91 88490 64832
+
 export const MessageModal: React.FC<MessageModalProps> = ({ listing, onClose, onShowToast }) => {
   if (!listing) return null;
 
   const defaultMessage = `Hi! I saw your listing for "${listing.name}" (₹${listing.price}) on Campus Cart AU and I'd like to buy it. Is it still available for campus pickup?`;
 
   const [message, setMessage] = useState(defaultMessage);
-  const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(message);
-    setCopied(true);
-    onShowToast('Message copied to clipboard!');
-    setTimeout(() => setCopied(false), 2000);
+  const whatsappHref = `https://wa.me/${AUSM_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+  const handleMessageUs = () => {
+    onShowToast('Opening WhatsApp...');
   };
 
   return (
@@ -38,11 +40,11 @@ export const MessageModal: React.FC<MessageModalProps> = ({ listing, onClose, on
         {/* Header */}
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-full bg-[#595B5A] border-2 border-[#1B3A5C] flex items-center justify-center font-bold text-lg text-white">
-            <MessageSquare className="w-5 h-5 text-white" />
+            <MessageCircle className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h3 className="font-extrabold text-lg text-[#1B3A5C]">Contact Seller</h3>
-            <p className="text-xs text-slate-500 font-medium">AU Campus Marketplace Direct Message</p>
+            <h3 className="font-extrabold text-lg text-[#1B3A5C]">Message AUSM</h3>
+            <p className="text-xs text-slate-500 font-medium">We'll connect you with the seller</p>
           </div>
         </div>
 
@@ -76,13 +78,16 @@ export const MessageModal: React.FC<MessageModalProps> = ({ listing, onClose, on
 
         {/* Action Buttons */}
         <div className="flex gap-2">
-          <button
-            onClick={handleCopy}
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleMessageUs}
             className="flex-1 bg-[#800020] hover:bg-[#600018] text-white font-extrabold text-xs py-3 px-4 rounded-full transition-colors flex items-center justify-center gap-2 cursor-pointer shadow-xs"
           >
-            {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-            <span>{copied ? 'Copied!' : 'Copy Message'}</span>
-          </button>
+            <MessageCircle className="w-4 h-4" />
+            <span>Message us on WhatsApp</span>
+          </a>
         </div>
 
       </div>

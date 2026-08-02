@@ -4,15 +4,28 @@ import { getFirestore, collection, onSnapshot, query, orderBy, addDoc, deleteDoc
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { Listing, ListingCategory, ListingCondition } from '../types';
 
-const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyA7Mw7YZOhomDAU4Dk60W0mFlHaFMEy3jM",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "au-campus-marketplace.firebaseapp.com",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "au-campus-marketplace",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "au-campus-marketplace.firebasestorage.app",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "923692004442",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:923692004442:web:8c9fe7c961469b2fe55463",
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-X6RWR90CEM"
+const requiredEnvVars = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
+
+const missingEnvVars = Object.entries(requiredEnvVars)
+  .filter(([, value]) => !value)
+  .map(([key]) => key);
+
+if (missingEnvVars.length > 0) {
+  throw new Error(
+    `Missing required Firebase environment variable(s): ${missingEnvVars.join(', ')}. ` +
+    `Copy .env.example to .env and fill in your Firebase project's config before running the app.`
+  );
+}
+
+const firebaseConfig = requiredEnvVars as Record<keyof typeof requiredEnvVars, string>;
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 export const auth = getAuth(app);

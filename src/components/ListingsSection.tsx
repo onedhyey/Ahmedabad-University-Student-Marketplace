@@ -419,7 +419,7 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                         ? 'bg-slate-200 text-slate-500 border-2 border-slate-300 cursor-not-allowed opacity-80 shadow-none'
                         : 'bg-[#1B3A5C] hover:bg-[#122840] text-white cursor-pointer'
                     }`}
-                    title={listing.isSold ? 'This item has been sold out' : 'Message seller'}
+                    title={listing.isSold ? 'This item has been sold out' : 'Check Availability'}
                   >
                     {listing.isSold ? (
                       <>
@@ -429,7 +429,7 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                     ) : (
                       <>
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Message seller</span>
+                        <span>Check Availability</span>
                       </>
                     )}
                   </button>

@@ -340,7 +340,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       }}
                       className="w-full text-left px-3 py-2 mt-1 rounded-xl text-xs font-bold text-[#1B3A5C] hover:bg-[#C9E2F5]/40 flex items-center gap-2 transition-colors cursor-pointer"
                     >
-                      <FileText className="w-4 h-4 text-[#800020]" /> Terms & Conditions
+                      <FileText className="w-4 h-4 text-[#800020]" /> Terms & Guidelines
                     </button>
 
                     <button
@@ -383,4 +383,3 @@ export const Navbar: React.FC<NavbarProps> = ({
     </>
   );
 };
-
