@@ -150,9 +150,9 @@ export const GuidePage: React.FC<GuidePageProps> = ({
               3
             </div>
             <div>
-              <h4 className="font-extrabold text-sm text-[#1B3A5C] mb-1">Message Seller Directly</h4>
+              <h4 className="font-extrabold text-sm text-[#1B3A5C] mb-1">Message Us on WhatsApp</h4>
               <p className="text-xs text-slate-600 leading-relaxed font-medium">
-                Click "Message seller" on any available listing card. Send your offer, ask questions about condition, and propose a convenient campus meetup time.
+                Click "Message Us" on any available listing card. It opens WhatsApp with a pre-filled message to AUSM — we'll relay it to the seller and help coordinate a convenient campus meetup time.
               </p>
             </div>
           </div>

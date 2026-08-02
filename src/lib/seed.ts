@@ -1,4 +1,4 @@
-import { collection, getDocs, setDoc, doc, deleteDoc, serverTimestamp } from 'firebase/firestore';
+import { setDoc, doc, deleteDoc, serverTimestamp, QueryDocumentSnapshot, DocumentData } from 'firebase/firestore';
 import { db } from './firebase';
 import habitsImg from '../assets/7_habits_book.png';
 
@@ -77,43 +77,25 @@ export const SEED_LISTINGS = [
 
 const VALID_SEED_IDS = new Set(SEED_LISTINGS.map(item => item.id));
 let isSeedingRunning = false;
+let isCleanupRunning = false;
 
-export async function seedInitialListingsIfEmpty() {
+// Writes the deterministic seed listings. Call this only when the caller
+// already knows (e.g. from an onSnapshot payload) that the collection is
+// empty — this function does not perform its own read, to avoid paying for
+// a redundant full-collection read on every single app load.
+export async function seedListings() {
   if (isSeedingRunning) return;
   isSeedingRunning = true;
 
   try {
-    const querySnapshot = await getDocs(collection(db, 'listings'));
-
-    if (querySnapshot.empty) {
-      console.log("Seeding initial AU campus listings with deterministic IDs...");
-      for (const item of SEED_LISTINGS) {
-        const { id, ...data } = item;
-        await setDoc(doc(db, 'listings', id), {
-          ...data,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp()
-        });
-      }
-    } else {
-      // Clean up any legacy duplicate seed items from previous addDoc runs
-      const deletePromises: Promise<void>[] = [];
-      querySnapshot.docs.forEach((docSnap) => {
-        const data = docSnap.data();
-        const docId = docSnap.id;
-        const sellerId = data.sellerId || '';
-        const isSeedSeller = sellerId.startsWith('seed_seller_');
-
-        // If it was created as a seed item but doesn't match our deterministic seed IDs, it's a legacy duplicate
-        if (isSeedSeller && !VALID_SEED_IDS.has(docId)) {
-          console.log(`Cleaning up legacy duplicate seed document ${docId}...`);
-          deletePromises.push(deleteDoc(doc(db, 'listings', docId)));
-        }
+    console.log("Seeding initial AU campus listings with deterministic IDs...");
+    for (const item of SEED_LISTINGS) {
+      const { id, ...data } = item;
+      await setDoc(doc(db, 'listings', id), {
+        ...data,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       });
-
-      if (deletePromises.length > 0) {
-        await Promise.all(deletePromises);
-      }
     }
   } catch (error) {
     console.warn("Could not seed listings (might be offline or Firestore rules):", error);
@@ -122,3 +104,35 @@ export async function seedInitialListingsIfEmpty() {
   }
 }
 
+// Cleans up legacy duplicate seed documents that were created (with random
+// Firestore-assigned IDs) before this app switched to deterministic seed
+// IDs. Takes the doc snapshots the caller already fetched via its own
+// onSnapshot listener, rather than performing a separate getDocs() read.
+export async function cleanupLegacySeedDuplicates(docs: QueryDocumentSnapshot<DocumentData>[]) {
+  if (isCleanupRunning) return;
+  isCleanupRunning = true;
+
+  try {
+    const deletePromises: Promise<void>[] = [];
+    docs.forEach((docSnap) => {
+      const data = docSnap.data();
+      const docId = docSnap.id;
+      const sellerId = data.sellerId || '';
+      const isSeedSeller = sellerId.startsWith('seed_seller_');
+
+      // If it was created as a seed item but doesn't match our deterministic seed IDs, it's a legacy duplicate
+      if (isSeedSeller && !VALID_SEED_IDS.has(docId)) {
+        console.log(`Cleaning up legacy duplicate seed document ${docId}...`);
+        deletePromises.push(deleteDoc(doc(db, 'listings', docId)));
+      }
+    });
+
+    if (deletePromises.length > 0) {
+      await Promise.all(deletePromises);
+    }
+  } catch (error) {
+    console.warn("Could not clean up legacy seed duplicates:", error);
+  } finally {
+    isCleanupRunning = false;
+  }
+}

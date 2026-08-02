@@ -7,6 +7,7 @@ import { Search, Heart, Share2, MessageCircle, Trash2, Tag, BookOpen, Bike, Zap,
 
 interface ListingsSectionProps {
   listings: Listing[];
+  isLoading?: boolean;
   user: User | null;
   activeTab: 'all' | 'favourites' | 'my-listings';
   setActiveTab: (tab: 'all' | 'favourites' | 'my-listings') => void;
@@ -19,6 +20,7 @@ const CATEGORY_FILTERS: ('All' | ListingCategory)[] = ['All', 'Books', 'Cycles',
 
 export const ListingsSection: React.FC<ListingsSectionProps> = ({
   listings,
+  isLoading = false,
   user,
   activeTab,
   setActiveTab,
@@ -192,7 +194,7 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
         <div className="flex items-center gap-3">
           <div className="bg-[#595B5A] text-white border-2 border-[#1B3A5C] font-extrabold text-lg px-4 py-1.5 rounded-2xl shadow-xs flex items-center gap-2">
             <Zap className="w-5 h-5 text-white fill-white" />
-            <span>{displayCount}</span>
+            <span>{isLoading ? '…' : displayCount}</span>
             <span className="text-xs uppercase tracking-wider font-black">Live Listings</span>
           </div>
         </div>
@@ -278,7 +280,24 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
       </div>
 
       {/* Grid of Corkboard Index Cards */}
-      {filteredListings.length === 0 ? (
+      {isLoading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" aria-busy="true" aria-live="polite">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div
+              key={`skeleton-${i}`}
+              className="border-2 border-[#1B3A5C]/30 rounded-2xl overflow-hidden bg-[#FAFBFC] animate-pulse"
+            >
+              <div className="w-full h-48 bg-slate-200 border-b-2 border-[#1B3A5C]/30" />
+              <div className="p-5 space-y-3">
+                <div className="h-4 bg-slate-200 rounded w-3/4" />
+                <div className="h-6 bg-slate-200 rounded w-1/3" />
+                <div className="h-3 bg-slate-200 rounded w-full" />
+                <div className="h-3 bg-slate-200 rounded w-2/3" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : filteredListings.length === 0 ? (
         <div className="bg-[#FAFBFC] border-2 border-dashed border-[#1B3A5C] rounded-3xl p-12 text-center my-8">
           <div className="w-16 h-16 bg-[#595B5A] text-white border-2 border-[#1B3A5C] rounded-full mx-auto flex items-center justify-center mb-4">
             <Search className="w-8 h-8 text-white" />
@@ -419,7 +438,7 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                         ? 'bg-slate-200 text-slate-500 border-2 border-slate-300 cursor-not-allowed opacity-80 shadow-none'
                         : 'bg-[#1B3A5C] hover:bg-[#122840] text-white cursor-pointer'
                     }`}
-                    title={listing.isSold ? 'This item has been sold out' : 'Check Availability'}
+                    title={listing.isSold ? 'This item has been sold out' : 'Message Us'}
                   >
                     {listing.isSold ? (
                       <>
@@ -429,7 +448,7 @@ export const ListingsSection: React.FC<ListingsSectionProps> = ({
                     ) : (
                       <>
                         <MessageCircle className="w-3.5 h-3.5" />
-                        <span>Check Availability</span>
+                        <span>Message Us</span>
                       </>
                     )}
                   </button>
