@@ -26,7 +26,7 @@
   </url>
   <!-- Manifesto Page -->
   <url>
-    <loc>https://yourdomain.com/manifesto</loc>
+    <loc>https://ausm.online/manifesto</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
