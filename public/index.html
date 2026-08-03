@@ -1,89 +1,88 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<!doctype html>
+<html lang="en" class="scroll-smooth">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.17.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.17.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.17.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function () {
+      try {
+        var target = window;
+        var desc = null;
+        while (target && !desc) {
+          desc = Object.getOwnPropertyDescriptor(target, 'fetch');
+          if (!desc) {
+            target = Object.getPrototypeOf(target);
+          }
         }
-      });
-    </script>
-  </body>
+        if (desc && desc.get && !desc.set) {
+          var currentFetch = window.fetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function () { return currentFetch; },
+            set: function (val) { currentFetch = val; },
+            configurable: true,
+            enumerable: true
+          });
+        }
+      } catch (e) {
+        // Ignore
+      }
+    })();
+  </script>
+  <title>AUSM — Ahmedabad University Student Marketplace</title>
+  <!-- Web App & PWA Settings -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="application-name" content="AUSM" />
+  <meta name="apple-mobile-web-app-title" content="AUSM" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="theme-color" content="#1B3A5C" />
+
+  <!-- Favicon links for Google Search Bot & Browsers -->
+  <!-- Google Search has limited/inconsistent support for SVG favicons, so
+         PNG is listed first as the primary icon; SVG remains for modern
+         browsers that render it in the tab bar. -->
+  <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <!-- Apple/iOS does not support SVG for touch icons at all, so this must be a PNG -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+  <!-- Open Graph / Social Media Meta Tags -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="AUSM — Ahmedabad University Student Marketplace" />
+  <meta property="og:description"
+    content="Sell it. Find it. Campus only. Buy & sell books, cycles, and electronics directly with fellow AU students." />
+  <meta property="og:image" content="https://ausm.online/favicon-96x96.png" />
+  <meta property="og:site_name" content="AUSM" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Caveat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+</head>
+
+<body class="bg-[#FAFBFC] text-[#1B3A5C] antialiased selection:bg-[#FFD93D] selection:text-[#1B3A5C]">
+  <div id="root">
+    <div
+      style="position: fixed; inset: 0; background-color: #FAFBFC; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 9999; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;">
+      <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 4,46 L 50,4 L 96,46 L 86,46 L 50,13 L 14,46 Z" fill="#800020" />
+        <path d="M 18,46 L 50,18 L 82,46 L 72,46 L 50,27 L 28,46 Z" fill="#800020" />
+        <path d="M 32,46 L 50,32 L 68,46 L 58,46 L 50,40 L 42,46 Z" fill="#800020" />
+        <path d="M 32,54 L 50,68 L 68,54 L 58,54 L 50,60 L 42,54 Z" fill="#800020" />
+        <path d="M 18,54 L 50,82 L 82,54 L 72,54 L 50,73 L 28,54 Z" fill="#800020" />
+        <path d="M 4,54 L 50,96 L 96,54 L 86,54 L 50,87 L 14,54 Z" fill="#800020" />
+      </svg>
+      <span style="margin-top: 16px; font-size: 32px; font-weight: 900; letter-spacing: 0.05em; color: #1B3A5C;">
+        AUSM
+      </span>
+    </div>
+  </div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

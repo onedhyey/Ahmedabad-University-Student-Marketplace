@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { auth, db, isAUStudent, signOutUser, handleFirestoreError, OperationType } from './lib/firebase';
 import { Listing } from './types';
-import { seedInitialListingsIfEmpty, SEED_LISTINGS } from './lib/seed';
+import { seedListings, cleanupLegacySeedDuplicates, SEED_LISTINGS } from './lib/seed';
 
 import { Logo } from './components/Logo';
 import { Navbar } from './components/Navbar';
@@ -175,18 +175,28 @@ export default function App() {
 
   // 2. Realtime Firestore Subscription (also handles one-time seed/cleanup,
   // driven off this same snapshot payload rather than a separate read)
-  useEffect(() => {
-    let hasCheckedSeedState = false;
+  const isCollectionEmptyRef = useRef(false);
+  const hasCleanedUpRef = useRef(false);
 
+  useEffect(() => {
     const unsubscribe = onSnapshot(
       collection(db, 'listings'),
       (snapshot) => {
-        // One-time seed / legacy-cleanup check per mount. Uses the docs we
-        // already fetched via this listener instead of an extra getDocs()
-        // collection read on every app load.
-        if (!hasCheckedSeedState) {
-          hasCheckedSeedState = true;
-          seedInitialListingsIfEmpty();
+        isCollectionEmptyRef.current = snapshot.empty;
+
+        if (snapshot.empty) {
+          // firestore.rules requires an authenticated user for writes, so an
+          // anonymous visitor's seed attempt would just fail silently. Only
+          // try if someone is currently signed in — the onAuthStateChanged
+          // listener below retries this once someone signs in later in the
+          // same session, so we're not just gambling on which visitor
+          // happens to load the site first.
+          if (auth.currentUser) {
+            seedListings();
+          }
+        } else if (!hasCleanedUpRef.current) {
+          hasCleanedUpRef.current = true;
+          cleanupLegacySeedDuplicates(snapshot.docs);
         }
 
         const rawListings: Listing[] = snapshot.docs.map((docSnap) => {
@@ -271,6 +281,18 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
+  // 2b. If the collection was empty and unauthenticated (so seeding was
+  // skipped above), retry seeding as soon as someone signs in during this
+  // session — since firestore.rules requires auth for writes.
+  useEffect(() => {
+    const unsubscribeAuth = auth.onAuthStateChanged((signedInUser) => {
+      if (signedInUser && isCollectionEmptyRef.current) {
+        seedListings();
+      }
+    });
+    return () => unsubscribeAuth();
+  }, []);
+
   const myListingsCount = user
     ? listings.filter((item) => item.sellerId === user.uid).length
     : 0;
@@ -292,13 +314,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col font-sans selection:bg-[#800020] selection:text-white">
-      
+
       {/* App Launch Splash Overlay */}
       {showSplash && (
         <div
-          className={`fixed inset-0 z-[9999] bg-[#FAFBFC] flex flex-col items-center justify-center transition-opacity duration-300 ease-out ${
-            splashFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
-          }`}
+          className={`fixed inset-0 z-[9999] bg-[#FAFBFC] flex flex-col items-center justify-center transition-opacity duration-300 ease-out ${splashFading ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
         >
           <div className="flex flex-col items-center animate-in zoom-in-95 duration-200">
             <Logo className="w-20 h-20" color="#800020" />
@@ -351,9 +372,9 @@ export default function App() {
             onNavigateToTerms={navigateToTerms}
           />
         ) : view === 'terms' || view === 'manifesto' ? (
-          <TermsPage 
-            initialTab={view === 'manifesto' ? 'manifesto' : 'terms'} 
-            onBackToMarketplace={navigateToHome} 
+          <TermsPage
+            initialTab={view === 'manifesto' ? 'manifesto' : 'terms'}
+            onBackToMarketplace={navigateToHome}
             onNavigateToTab={(tab) => {
               if (tab === 'manifesto') navigateToManifesto();
               else navigateToTerms();
@@ -397,11 +418,11 @@ export default function App() {
       </main>
 
       {/* (4) Footer */}
-      <Footer 
+      <Footer
         onOpenGuide={navigateToGuide}
         onOpenDiscounts={navigateToDiscounts}
-        onOpenTerms={navigateToTerms} 
-        onOpenManifesto={navigateToManifesto} 
+        onOpenTerms={navigateToTerms}
+        onOpenManifesto={navigateToManifesto}
       />
 
       {/* Modals & Popups */}
