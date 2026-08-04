@@ -22,12 +22,9 @@ export const MessageModal: React.FC<MessageModalProps> = ({
 
   const defaultMessage = `Hi AUSM!
 
-I'm interested in this listing from the Ahmedabad University Student Marketplace (AUSM):
+I'd like to buy "${listing.name}" if it's still available.
 
-• ${listing.name}
-• ₹${listing.price}
-
-Could you please check if it's still available? If yes, I'd love to proceed with the purchase. Please coordinate with the seller and let me know the next steps.
+Could you please let me know the next steps?
 
 Thanks!`;
 
@@ -100,14 +97,14 @@ Thanks!`;
           </label>
 
           <textarea
-            rows={7}
+            rows={5}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             className="w-full bg-white border-2 border-[#1B3A5C] rounded-2xl p-3 text-xs font-medium text-[#1B3A5C] focus:outline-none focus:ring-2 focus:ring-[#800020]"
           />
         </div>
 
-        {/* Action */}
+        {/* Action Button */}
         <div className="flex gap-2">
           <a
             href={whatsappHref}
