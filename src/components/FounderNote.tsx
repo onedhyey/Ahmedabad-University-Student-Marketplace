@@ -2,7 +2,7 @@ import React from 'react';
 import { Linkedin, Mail, CheckCircle2, ArrowRight } from 'lucide-react';
 import founderPhoto from '../assets/founder.jpeg';
 
-interface FounderNoteProps {
+interface ArchitectNoteProps {
   // 'full' matches the original Manifesto page layout (labeled social links).
   // 'compact' is for the home page: icon-only social buttons, plus a button
   // linking back to the full Manifesto page.
@@ -10,7 +10,7 @@ interface FounderNoteProps {
   onViewManifesto?: () => void;
 }
 
-export const FounderNote: React.FC<FounderNoteProps> = ({ variant = 'full', onViewManifesto }) => {
+export const ArchitectNote: React.FC<ArchitectNoteProps> = ({ variant = 'full', onViewManifesto }) => {
   const isCompact = variant === 'compact';
 
   return (
@@ -23,22 +23,22 @@ export const FounderNote: React.FC<FounderNoteProps> = ({ variant = 'full', onVi
           >
             <img
               src={founderPhoto}
-              alt="Dhyey Mody - Founder of AUSM"
+              alt="Dhyey Mody - Architect of AUSM"
               onContextMenu={(e) => e.preventDefault()}
               onDragStart={(e) => e.preventDefault()}
               className="w-full h-full object-cover scale-[1.375] hover:scale-[1.50] transform transition-transform duration-300 pointer-events-auto select-none"
             />
           </div>
-          <div className="absolute -bottom-1.5 -right-1.5 bg-[#1B3A5C] text-[#FFD93D] p-1.5 rounded-xl border-2 border-white shadow-xs" title="Founder">
+          <div className="absolute -bottom-1.5 -right-1.5 bg-[#1B3A5C] text-[#FFD93D] p-1.5 rounded-xl border-2 border-white shadow-xs" title="Architect">
             <CheckCircle2 className="w-4 h-4" />
           </div>
         </div>
         <div>
           <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-amber-100 text-[#800020] text-[11px] font-black uppercase tracking-wider mb-1">
-            Founder & Creator
+            The Architect
           </div>
           <h2 className="text-xl sm:text-2xl font-black text-[#1B3A5C]">
-            A note from the founder
+            A note from the architect
           </h2>
           <p className="text-xs font-bold text-slate-500 mt-0.5">
             Dhyey Mody • BTech CSE Student at Ahmedabad University
@@ -62,7 +62,7 @@ export const FounderNote: React.FC<FounderNoteProps> = ({ variant = 'full', onVi
       </div>
 
       <div className="mt-6 pt-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
-        {/* Left side: social links */}
+        {/* Left side: social links (icon-only) */}
         <div className="flex items-center gap-3 text-xs sm:text-sm font-bold">
           <a
             href="https://www.linkedin.com/in/dhyeymody/"
@@ -70,27 +70,17 @@ export const FounderNote: React.FC<FounderNoteProps> = ({ variant = 'full', onVi
             rel="noopener noreferrer"
             title="Connect with me on LinkedIn"
             aria-label="Connect with me on LinkedIn"
-            className={
-              isCompact
-                ? 'inline-flex items-center justify-center w-10 h-10 shrink-0 text-[#1B3A5C] hover:text-[#0077B5] bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-[#0077B5] rounded-xl transition-all'
-                : 'inline-flex items-center gap-2 text-[#1B3A5C] hover:text-[#0077B5] bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-[#0077B5] px-4 py-2.5 rounded-xl transition-all'
-            }
+            className="inline-flex items-center justify-center w-10 h-10 shrink-0 text-[#1B3A5C] hover:text-[#0077B5] bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-[#0077B5] rounded-xl transition-all"
           >
             <Linkedin className="w-4 h-4 text-[#0077B5]" />
-            {!isCompact && <span>LinkedIn: https://www.linkedin.com/in/dhyeymody/</span>}
           </a>
           <a
             href="mailto:dhyey.m@ahduni.edu.in"
             title="Email me"
             aria-label="Email me"
-            className={
-              isCompact
-                ? 'inline-flex items-center justify-center w-10 h-10 shrink-0 text-[#1B3A5C] hover:text-[#800020] bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-[#800020] rounded-xl transition-all'
-                : 'inline-flex items-center gap-2 text-[#1B3A5C] hover:text-[#800020] bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-[#800020] px-4 py-2.5 rounded-xl transition-all'
-            }
+            className="inline-flex items-center justify-center w-10 h-10 shrink-0 text-[#1B3A5C] hover:text-[#800020] bg-slate-50 hover:bg-amber-50 border border-slate-200 hover:border-[#800020] rounded-xl transition-all"
           >
             <Mail className="w-4 h-4 text-[#800020]" />
-            {!isCompact && <span>Email: dhyey.m@ahduni.edu.in</span>}
           </a>
         </div>
 
