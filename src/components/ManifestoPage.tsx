@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FounderNote } from './FounderNote';
+import { ArchitectNote } from './ArchitectNote';
 import { 
   Sparkles, 
   ArrowLeft, 
@@ -270,8 +270,8 @@ export const ManifestoPage: React.FC<ManifestoPageProps> = ({
             </div>
           </div>
 
-          {/* A Note From the Founder */}
-          <FounderNote variant="full" />
+          {/* A Note From the Architect */}
+          <ArchitectNote variant="full" />
 
         </div>
       ) : (
